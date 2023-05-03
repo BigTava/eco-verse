@@ -3,7 +3,7 @@ import { WalletContext } from "../../context/Wallet.context";
 import { FC, Fragment, useContext, useEffect, useState } from "react";
 import { ReactComponent as Cross } from "../../assets/icons/Cross.svg";
 import { m } from "../../plugins/magic";
-import { ethers } from "ethers";
+import { providers } from "ethers";
 import { MagicSDKExtensionsOption } from "magic-sdk";
 import { InstanceWithExtensions, SDKBase } from "@magic-sdk/provider";
 
@@ -35,7 +35,7 @@ const ModalMagicConnexion: FC<ModalMagicConnexionProps> = ({
         metadata.publicAddress || "",
         meterID
       );
-      const provider = new ethers.providers.Web3Provider(m.rpcProvider as any);
+      const provider = new providers.Web3Provider(m.rpcProvider as any);
       const signer = provider.getSigner();
       setSigner(signer);
       closeModal();
@@ -56,9 +56,7 @@ const ModalMagicConnexion: FC<ModalMagicConnexionProps> = ({
           metadata.publicAddress || "",
           meterID
         );
-        const provider = new ethers.providers.Web3Provider(
-          m.rpcProvider as any
-        );
+        const provider = new providers.Web3Provider(m.rpcProvider as any);
         const signer = provider.getSigner();
         setSigner(signer);
         closeModal();
