@@ -1,10 +1,32 @@
-import { Magic } from "magic-sdk";
+import { EthNetworkConfiguration, Magic } from "magic-sdk";
+import { Networks } from "../utils/networks";
 
-const customNodeOptions = {
-  rpcUrl: "https://matic-mumbai.chainstacklabs.com",
-  chainId: 80001,
+const formattedNetwork = (): EthNetworkConfiguration => {
+  const network = localStorage.getItem("network");
+  switch (network) {
+    case Networks.Optimism:
+      return {
+        rpcUrl: process.env.REACT_APP_OPTIMISM_RPC_URL as string,
+        chainId: 420,
+      };
+    case Networks.Polygon:
+      return {
+        rpcUrl: process.env.REACT_APP_POLYGON_RPC_URL as string,
+        chainId: 80001,
+      };
+    case Networks.Goerli:
+      return {
+        rpcUrl: process.env.REACT_APP_GOERLI_RPC_URL as string,
+        chainId: 5,
+      };
+    default:
+      return {
+        rpcUrl: process.env.REACT_APP_SEPOLIA_RPC_URL as string,
+        chainId: 11155111,
+      };
+  }
 };
 
-export const m = new Magic("pk_live_8112EC8639264542", {
-  network: customNodeOptions,
+export const magic = new Magic(process.env.REACT_APP_MAGIC_API_KEY as string, {
+  network: formattedNetwork(),
 });

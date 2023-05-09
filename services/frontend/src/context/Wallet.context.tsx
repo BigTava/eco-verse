@@ -7,6 +7,7 @@ type WalletContextProps = {
   disconnect: () => void;
   isWalletConnected: boolean;
   email: string;
+  isSignedIn: boolean;
   initMagicWallet: (email: string, address: string, meterID: string) => void;
   disconnectMagic: () => void;
   setSigner: Function;
@@ -26,6 +27,7 @@ const WalletProvider = ({ children }: WalletProviderProps) => {
   const [signer, setSigner] = useState();
   const [email, setEmail] = useState<string>("");
   const [meterID, setMeterID] = useState<string>("");
+  const [isSignedIn, setIsSignedIn] = useState<boolean>(false);
 
   const initMagicWallet = async (
     email: string,
@@ -33,9 +35,10 @@ const WalletProvider = ({ children }: WalletProviderProps) => {
     meterId: string
   ) => {
     setEmail(email);
-    setIsWalletConnected(true);
     setCurrentWalletAddress(address);
     setMeterID(meterId);
+    setIsWalletConnected(true);
+    setIsSignedIn(false);
   };
 
   const disconnectMagic = async () => {
@@ -59,6 +62,7 @@ const WalletProvider = ({ children }: WalletProviderProps) => {
         initWallet,
         disconnect,
         email,
+        isSignedIn,
         initMagicWallet,
         disconnectMagic,
         setSigner,
