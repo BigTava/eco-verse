@@ -1,153 +1,117 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { WalletContext } from "../../context/Wallet.context";
-import { FC, Fragment, useContext, useEffect, useState } from "react";
-import { ReactComponent as Cross } from "../../assets/icons/Cross.svg";
-import { m } from "../../plugins/magic";
-import { providers } from "ethers";
-import { MagicSDKExtensionsOption } from "magic-sdk";
-import { InstanceWithExtensions, SDKBase } from "@magic-sdk/provider";
-
-type ModalMagicConnexionProps = {
-  isOpen: boolean;
-  setIsOpen: Function;
-};
-
-const ModalMagicConnexion: FC<ModalMagicConnexionProps> = ({
-  isOpen,
-  setIsOpen,
-}) => {
-  const [email, setEmail] = useState<string>("");
-  const [meterID, setMeterID] = useState<string>("");
-  const { initMagicWallet, setSigner } = useContext(WalletContext);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  const magicConnected = async (
-    m: InstanceWithExtensions<SDKBase, MagicSDKExtensionsOption<string>>
-  ) => {
-    const isLoggedIn = await m.user.isLoggedIn();
-    if (isLoggedIn) {
-      const metadata = await m.user.getMetadata();
-      initMagicWallet(
-        metadata.email || "",
-        metadata.publicAddress || "",
-        meterID
-      );
-      const provider = new providers.Web3Provider(m.rpcProvider as any);
-      const signer = provider.getSigner();
-      setSigner(signer);
-      closeModal();
-    }
-  };
-
-  useEffect(() => {
-    magicConnected(m as any);
-  }, []);
-
-  const authenticationMagic = async () => {
-    await m.auth
-      .loginWithEmailOTP({ email })
-      .then(async () => {
-        const metadata = await m.user.getMetadata();
-        initMagicWallet(
-          metadata.email || "",
-          metadata.publicAddress || "",
-          meterID
-        );
-        const provider = new providers.Web3Provider(m.rpcProvider as any);
-        const signer = provider.getSigner();
-        setSigner(signer);
-        closeModal();
-      })
-      .catch((error: Error) => {
-        throw new Error("MAGIC_AUTH_ERROR: " + error.message);
-      });
-  };
-
+/*eslint-disable*/
+const SignUp = () => {
   return (
-    <>
-      <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+    <div
+      id="authentication-modal"
+      tabIndex={-1}
+      aria-hidden="true"
+      className="fixed top-0 left-0 right-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+    >
+      <div className="relative max-h-full w-full max-w-md">
+        <div className="relative rounded-lg bg-white shadow dark:bg-gray-700">
+          <button
+            type="button"
+            className="absolute top-3 right-2.5 ml-auto inline-flex items-center rounded-lg bg-transparent p-1.5 text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-white"
+            data-modal-hide="authentication-modal"
           >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="bg-gray800 fixed inset-0 overflow-y-auto bg-opacity-30">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="card max-h-[536px] w-full max-w-md transform overflow-hidden text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="border-borderCardAbout flex flex-row items-center justify-between border-b-[0.5px] border-solid p-6  text-lg font-medium leading-6 text-gray-900"
+            <svg
+              aria-hidden="true"
+              className="h-5 w-5"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+            <span className="sr-only">Close modal</span>
+          </button>
+          <div className="px-6 py-6 lg:px-8">
+            <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">
+              Sign in to our platform
+            </h3>
+            <form className="space-y-6" action="#">
+              <div>
+                <label
+                  id="email"
+                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Your email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
+                  placeholder="name@company.com"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  id="password"
+                  className="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Your password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-500 dark:bg-gray-600 dark:text-white dark:placeholder-gray-400"
+                  required
+                />
+              </div>
+              <div className="flex justify-between">
+                <div className="flex items-start">
+                  <div className="flex h-5 items-center">
+                    <input
+                      id="remember"
+                      type="checkbox"
+                      value=""
+                      className="focus:ring-3 h-4 w-4 rounded border border-gray-300 bg-gray-50 focus:ring-blue-300 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-800 dark:focus:ring-blue-600 dark:focus:ring-offset-gray-800"
+                      required
+                    />
+                  </div>
+                  <label
+                    id="remember"
+                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >
-                    <div>
-                      Connection with
-                      <span className=" text-magicWallet"> Magic Wallet</span>
-                    </div>
-                    <Cross
-                      className=" hover:cursor-pointer"
-                      onClick={() => {
-                        closeModal();
-                      }}
-                    />
-                  </Dialog.Title>
-                  <div className="flex flex-col  gap-2   p-5">
-                    <div>Recipient email</div>
-                    <input
-                      placeholder="Enter an email..."
-                      type="text"
-                      className="h-[40px] w-[100%] rounded-lg border-[0.5px] border-solid border-[#00000033] p-[10px]"
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                      }}
-                    />
-
-                    <div>Meter ID</div>
-                    <input
-                      placeholder="Enter your meterID..."
-                      type="text"
-                      className="h-[40px] w-[100%] rounded-lg border-[0.5px] border-solid border-[#00000033] p-[10px]"
-                      onChange={(e) => {
-                        setMeterID(e.target.value);
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center justify-center pb-5">
-                    <button
-                      onClick={() => {
-                        authenticationMagic();
-                      }}
-                      className="flex h-[48px]  items-center justify-center rounded-lg  bg-magicWallet px-6 py-3 text-base font-normal text-white hover:cursor-pointer"
-                    >
-                      Login
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
+                    Remember me
+                  </label>
+                </div>
+                <a
+                  href="#"
+                  className="text-sm text-blue-700 hover:underline dark:text-blue-500"
+                >
+                  Lost Password?
+                </a>
+              </div>
+              <button
+                type="submit"
+                className="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Login to your account
+              </button>
+              <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
+                Not registered?{" "}
+                <a
+                  href="#"
+                  className="text-blue-700 hover:underline dark:text-blue-500"
+                >
+                  Create account
+                </a>
+              </div>
+            </form>
           </div>
-        </Dialog>
-      </Transition>
-    </>
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default ModalMagicConnexion;
+export default SignUp;

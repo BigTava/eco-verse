@@ -1,9 +1,20 @@
-import Container from "src/components/Container";
+// Core
+import { useState } from "react";
 
+// Components
+import Container from "src/components/Container";
+import Modal from "src/components/Modal/Modal";
+import SignUp from "src/pages/Signup";
+
+// Images
 import heroImg from "src/assets/images/hero.png";
+
+// Others
 import Sponsors from "./Sponsors";
 
 const Landing = () => {
+  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+
   return (
     <>
       <Container className="flex flex-wrap ">
@@ -18,13 +29,11 @@ const Landing = () => {
               And its completely open-source.
             </p>
 
-            <div className="flex flex-col items-start space-y-3 sm:flex-row sm:items-center sm:space-x-4 sm:space-y-0">
-              <a
-                href="https://web3templates.com/templates/nextly-landing-page-template-for-startups"
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-md bg-indigo-600 px-8 py-4 text-center text-lg font-medium text-white "
-              >
+            <div
+              onClick={() => setIsSignUpModalOpen(true)}
+              className="flex flex-col items-start space-y-3 sm:flex-row sm:items-center sm:space-x-4 sm:space-y-0"
+            >
+              <a className="rounded-md bg-indigo-600 px-8 py-4 text-center text-lg font-medium text-white ">
                 Sign Up
               </a>
               <a
@@ -64,6 +73,12 @@ const Landing = () => {
           </div>
         </div>
       </Container>
+      <Modal
+        showModal={isSignUpModalOpen}
+        closeFunction={() => setIsSignUpModalOpen(false)}
+      >
+        <SignUp />
+      </Modal>
       <Sponsors />
     </>
   );

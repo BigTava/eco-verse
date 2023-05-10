@@ -26,7 +26,7 @@ const Header = () => {
         </div>
       </div>
 
-      {isSignedIn ? (
+      {isSignedIn && (
         <div className="flex items-center justify-center gap-[12px] space-x-2">
           <div
             className={`flex h-[100%] items-center gap-[8px] hover:cursor-pointer ${
@@ -64,7 +64,9 @@ const Header = () => {
             </div>
           </div>
         </div>
-      ) : (
+      )}
+
+      {!isSignedIn && (
         <div
           className={`flex h-[100%] items-center justify-center hover:cursor-pointer hover:border-b-[3px] hover:border-b-green-400`}
           onClick={() => {
