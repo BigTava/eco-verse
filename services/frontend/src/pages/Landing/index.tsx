@@ -1,10 +1,8 @@
 // Core
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Components
 import Container from "src/components/Container";
-import Modal from "src/components/Modal/Modal";
-import SignUp from "src/pages/Signup";
 
 // Images
 import heroImg from "src/assets/images/hero.png";
@@ -13,7 +11,7 @@ import heroImg from "src/assets/images/hero.png";
 import Sponsors from "./Sponsors";
 
 const Landing = () => {
-  const [isSignUpModalOpen, setIsSignUpModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -30,7 +28,7 @@ const Landing = () => {
             </p>
 
             <div
-              onClick={() => setIsSignUpModalOpen(true)}
+              onClick={() => navigate("/signup")}
               className="flex flex-col items-start space-y-3 sm:flex-row sm:items-center sm:space-x-4 sm:space-y-0"
             >
               <a className="rounded-md bg-indigo-600 px-8 py-4 text-center text-lg font-medium text-white ">
@@ -73,12 +71,7 @@ const Landing = () => {
           </div>
         </div>
       </Container>
-      <Modal
-        showModal={isSignUpModalOpen}
-        closeFunction={() => setIsSignUpModalOpen(false)}
-      >
-        <SignUp />
-      </Modal>
+
       <Sponsors />
     </>
   );

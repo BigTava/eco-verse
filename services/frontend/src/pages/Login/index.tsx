@@ -98,7 +98,7 @@ const Login: FC<ModalMagicConnexionProps> = ({ isOpen, setIsOpen }) => {
                     />
                   </Dialog.Title>
                   <div className="flex flex-col  gap-2   p-5">
-                    <div>Recipient email</div>
+                    <div>Email</div>
                     <input
                       placeholder="Enter an email..."
                       type="text"

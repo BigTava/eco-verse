@@ -29,7 +29,7 @@ abstract contract ERC1155Votes is ERC1155, Votes {
     }
 
     /**
-     * @dev Returns the balance of `account`.
+     * @dev Returns the voting units of `account`.
      */
     function _getVotingUnits(
         address account,
