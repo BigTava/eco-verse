@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "../../components/Modal/Modal";
-import ConnectButton from "../../components/ConnectButton/ConnectButton";
-import MintButton from "../../components/MintButton/MintButton";
+import ConnectButton from "../../components/Buttons/ConnectButton/ConnectButton";
+import MintButton from "../../components/Buttons/MintButton/MintButton";
 
 const TemplatePage = () => {
   const [isOpen, setIsOpen] = useState(false);

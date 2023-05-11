@@ -1,7 +1,7 @@
 import React from "react";
 import { usePrepareContractWrite, useContractWrite } from "wagmi";
-import { abiFBAYC } from "../../utils/constants/abi/FBAYC";
-import { addressFBAYC } from "../../utils/constants/address/FBAYC";
+import { abiFBAYC } from "src/utils/constants/abi/FBAYC";
+import { addressFBAYC } from "src/utils/constants/address/FBAYC";
 
 const MintButton = () => {
   const { config } = usePrepareContractWrite({
