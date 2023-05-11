@@ -38,7 +38,7 @@ const WalletProvider = ({ children }: WalletProviderProps) => {
     setCurrentWalletAddress(address);
     setMeterID(meterId);
     setIsWalletConnected(true);
-    setIsSignedIn(false);
+    setIsSignedIn(true);
   };
 
   const disconnectMagic = async () => {
