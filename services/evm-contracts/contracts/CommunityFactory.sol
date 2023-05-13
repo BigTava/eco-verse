@@ -1,16 +1,19 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
-import "./Crowdlending.sol";
+error CommunityItems__MemberAlreadyHasThisMembership();
 
-contract CrowdlendingFactory {
-    address[] private allCampaigns;
+contract CommunityFactory {
+
+    address[] private allCommunities;
 
     constructor() {}
 
-    function createCampaign(
+    function createCommunity(
         address _owner,
         uint32 _apy,
         address _token,
@@ -24,7 +27,9 @@ contract CrowdlendingFactory {
         allCampaigns.push(campaignAddress);
     }
 
-    function getAllCampaigns() public view returns (address[] memory) {
+    function getAllCommunities() public view returns (address[] memory) {
         return allCampaigns;
     }
+}
+
 }
