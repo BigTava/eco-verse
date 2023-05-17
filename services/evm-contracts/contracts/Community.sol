@@ -7,6 +7,7 @@ import "./Governance.sol";
 import "./CommunityItems.sol";
 import "./CrowdlendingFactory.sol";
 
+/* Errors */
 error Community__MemberIsInCommunity();
 
 /** @title Energy Community Contract

@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 import "./token/ERC1155Votes.sol";
 
+/* Errors */
 error CommunityItems__MemberAlreadyHasThisMembership();
 
 contract CommunityItems is ERC1155Votes, Ownable {

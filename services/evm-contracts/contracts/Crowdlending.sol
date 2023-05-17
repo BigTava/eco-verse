@@ -5,8 +5,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "hardhat/console.sol";
 
-import "./schemas.sol";
-
 /* Errors */
 error Crowdlending__InvalidDate();
 error Crowdlending__ErrorLaunchingCampaign();
@@ -15,11 +13,26 @@ error Crowdlending__ErrorUnpledging();
 error Crowdlending__ErrorClaiming();
 error Crowdlending__ErrorRepaying();
 
+/**
+ * @dev This contract is designed to handle the logic for managing a
+ * single crowdlending campaign.
+ */
 contract Crowdlending is Ownable {
-    /**
-     * @dev This contract is designed to handle the logic for managing a
-     * single crowdlending campaign.
-     */
+    //----------------- Type declarations -----------------
+    enum CampaignState {
+        OPEN,
+        LAUNCHED,
+        COMPLETED
+    }
+    struct Campaign {
+        address creator;
+        uint32 apy;
+        uint goal;
+        uint pledged;
+        uint startAt;
+        uint endAt;
+        bool claimed;
+    }
 
     //----------------- State variables -------------------
     uint public totalPledgedAmount;
