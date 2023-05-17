@@ -4,8 +4,8 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 import "./Governance.sol";
-import "./CrowdlendingFactory.sol";
 import "./CommunityItems.sol";
+import "./CrowdlendingFactory.sol";
 
 error Community__MemberIsInCommunity();
 
@@ -51,6 +51,9 @@ contract Community is Ownable {
         string memory _name,
         int256 _epicenterX,
         int256 _epicenterY,
+        string memory _uri,
+        string memory _nameEIP721,
+        string memory _versionEIP721,
         TimelockController _timelock,
         uint256 _quorumPercentage,
         uint256 _votingPeriod,
@@ -59,7 +62,7 @@ contract Community is Ownable {
         i_name = _name;
         i_epicenter = Location(_epicenterX, _epicenterY);
 
-        i_communityItems = new CommunityItems();
+        i_communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
         i_crowdlendingFactory = new CrowdlendingFactory();
         i_governance = new Governance(
             i_communityItems,

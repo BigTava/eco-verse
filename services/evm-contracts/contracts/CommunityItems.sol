@@ -2,8 +2,8 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "./token/ERC1155Votes.sol";
 import "hardhat/console.sol";
+import "./token/ERC1155Votes.sol";
 
 error CommunityItems__MemberAlreadyHasThisMembership();
 
@@ -22,7 +22,11 @@ contract CommunityItems is ERC1155Votes, Ownable {
     //----------------- Modifiers -------------------------
 
     //----------------- Functions -------------------------
-    constructor() {}
+    constructor(
+        string memory _uri,
+        string memory _name,
+        string memory _version
+    ) ERC1155Votes(_uri) EIP712(_name, _version) {}
 
     function mintMembership(address _member, uint256 _membershipId) private onlyOwner {
         if (balanceOf(_member, _membershipId) > 0) {
@@ -51,5 +55,25 @@ contract CommunityItems is ERC1155Votes, Ownable {
         mintMembership(_external, EXTERNAL_MEMBERSHIP);
     }
 
-    function _getVotingUnits(address) internal view virtual override returns (uint256) {}
+    function getIds() public pure returns (uint256[5] memory) {
+        return [
+            CREATOR_MEMBERSHIP,
+            CONSUMER_MEMBERSHIP,
+            INVESTOR_MEMBERSHIP,
+            INVESTOR_MEMBERSHIP,
+            EXTERNAL_MEMBERSHIP
+        ];
+    }
+
+    /**
+     * @dev Returns the voting units of `account`.
+     */
+    function _getVotingUnits(
+        address account
+    ) internal view virtual override returns (uint256 totalBalance) {
+        uint256[5] memory ids = getIds();
+        for (uint256 i = 0; i < ids.length; i++) {
+            totalBalance += balanceOf(account, ids[i]);
+        }
+    }
 }

@@ -32,21 +32,23 @@ const config: HardhatUserConfig = {
     networks: {
         hardhat: {
             hardfork: "merge",
-            // If you want to do some forking set `enabled` to true
             forking: {
                 url: MAINNET_RPC_URL,
                 enabled: false,
             },
             chainId: 31337,
+            allowUnlimitedContractSize: true,
         },
         localhost: {
             chainId: 31337,
+            allowUnlimitedContractSize: true,
         },
         sepolia: {
             url: SEPOLIA_RPC_URL !== undefined ? SEPOLIA_RPC_URL : "",
             accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
             saveDeployments: true,
             chainId: 11155111,
+            allowUnlimitedContractSize: true,
         },
         mainnet: {
             url: MAINNET_RPC_URL,

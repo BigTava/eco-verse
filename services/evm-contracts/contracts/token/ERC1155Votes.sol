@@ -13,6 +13,9 @@ abstract contract ERC1155Votes is ERC1155, Votes {
      *
      * Emits a {IVotes-DelegateVotesChanged} event.
      */
+
+    constructor(string memory uri_) ERC1155(uri_) {}
+
     function _afterTokenTransfer(
         address operator,
         address from,
@@ -25,18 +28,6 @@ abstract contract ERC1155Votes is ERC1155, Votes {
 
         for (uint256 i = 0; i < ids.length; i++) {
             _transferVotingUnits(from, to, amounts[i]);
-        }
-    }
-
-    /**
-     * @dev Returns the voting units of `account`.
-     */
-    function _getVotingUnits(
-        address account,
-        uint256[] memory ids
-    ) internal view virtual returns (uint256 totalBalance) {
-        for (uint256 i = 0; i < ids.length; i++) {
-            totalBalance += balanceOf(account, ids[i]);
         }
     }
 }

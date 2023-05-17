@@ -6,8 +6,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 import "./Community.sol";
 
-error CommunityItems__MemberAlreadyHasThisMembership();
-
 /** @title Energy Community Factory Contract
  *  @author EcoVerse
  *  @notice This factory contract allows creating and tracking the Community contract
@@ -30,6 +28,9 @@ contract CommunityFactory {
         string memory _name,
         int256 _epicenterLon,
         int256 _epicenterLat,
+        string memory _uri,
+        string memory _nameEIP721,
+        string memory _versionEIP721,
         TimelockController _timelock,
         uint256 _quorumPercentage,
         uint256 _votingPeriod,
@@ -39,6 +40,9 @@ contract CommunityFactory {
             _name,
             _epicenterLon,
             _epicenterLat,
+            _uri,
+            _nameEIP721,
+            _versionEIP721,
             _timelock,
             _quorumPercentage,
             _votingPeriod,
