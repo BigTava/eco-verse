@@ -31,7 +31,7 @@ contract CommunityFactory {
         string memory _uri,
         string memory _nameEIP721,
         string memory _versionEIP721,
-        TimelockController _timelock,
+        uint256 _minDelay,
         uint256 _quorumPercentage,
         uint256 _votingPeriod,
         uint256 _votingDelay
@@ -43,7 +43,7 @@ contract CommunityFactory {
             _uri,
             _nameEIP721,
             _versionEIP721,
-            _timelock,
+            _minDelay,
             _quorumPercentage,
             _votingPeriod,
             _votingDelay

@@ -38,6 +38,7 @@ contract Community is Ownable {
     Location private i_epicenter;
     CommunityItems private i_communityItems;
     CrowdlendingFactory private i_crowdlendingFactory;
+    TimelockController private i_timelock;
     Governance private i_governance;
 
     mapping(address => Member) private s_members; // member -> details
@@ -50,39 +51,50 @@ contract Community is Ownable {
     //----------------- Functions -------------------------
     constructor(
         string memory _name,
-        int256 _epicenterX,
-        int256 _epicenterY,
+        int256 _epicenterLat,
+        int256 _epicenterLon,
         string memory _uri,
         string memory _nameEIP721,
         string memory _versionEIP721,
-        TimelockController _timelock,
+        uint256 _minDelay,
         uint256 _quorumPercentage,
         uint256 _votingPeriod,
         uint256 _votingDelay
     ) {
         i_name = _name;
-        i_epicenter = Location(_epicenterX, _epicenterY);
+        i_epicenter = Location(_epicenterLat, _epicenterLon);
 
-        i_communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
-        i_crowdlendingFactory = new CrowdlendingFactory();
+        // TimeLock
+        address[] memory proposers;
+        address[] memory executors;
+        i_timelock = new TimelockController(_minDelay, proposers, executors, address(this));
         i_governance = new Governance(
             i_communityItems,
-            _timelock,
+            i_timelock,
             _quorumPercentage,
             _votingPeriod,
             _votingDelay
         );
+        i_timelock.grantRole(i_timelock.EXECUTOR_ROLE(), address(i_governance));
+        i_timelock.grantRole(i_timelock.PROPOSER_ROLE(), address(0));
+        i_timelock.revokeRole(i_timelock.TIMELOCK_ADMIN_ROLE(), address(this));
 
-        transferOwnership(address(i_governance));
+        transferOwnership(address(i_timelock));
+
+        // CommunityItems
+        i_communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
+
+        // CrowdlendingFactory
+        i_crowdlendingFactory = new CrowdlendingFactory();
     }
 
-    function enterCommunity(int256 _locationX, int256 _locatinoY) public {
+    function enterCommunity(int256 _locationLat, int256 _locatinoLon) public onlyOwner {
         Member memory newMember = s_members[msg.sender];
 
         if (newMember.status != MemberStatus.INACTIVE) {
             revert Community__MemberIsInCommunity();
         }
-        s_members[msg.sender] = Member(Location(_locationX, _locatinoY), MemberStatus.PENDING);
+        s_members[msg.sender] = Member(Location(_locationLat, _locatinoLon), MemberStatus.PENDING);
     }
 
     /* Getter Functions */
@@ -92,5 +104,21 @@ contract Community is Ownable {
 
     function getName() public view returns (string memory) {
         return i_name;
+    }
+
+    function getCommunityItems() public view returns (address) {
+        return address(i_communityItems);
+    }
+
+    function getCrowdlendingFactory() public view returns (address) {
+        return address(i_crowdlendingFactory);
+    }
+
+    function getTimelock() public view returns (address) {
+        return address(i_timelock);
+    }
+
+    function getGovernance() public view returns (address) {
+        return address(i_governance);
     }
 }
