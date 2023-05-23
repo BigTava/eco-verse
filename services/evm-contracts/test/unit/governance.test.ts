@@ -66,19 +66,15 @@ describe.only("Governance Flow", async () => {
             const proposer = accounts[0]
 
             // propose
-            console.log(0)
             const encodedFunctionCall = community.interface.encodeFunctionData(func, [
                 locationLat,
                 locationLon,
             ])
-            console.log((await governance.proposalThreshold()).toString())
-            console.log(1)
             const proposeTx = await governance
                 .connect(proposer)
                 .propose([community.address], [0], [encodedFunctionCall], proposalDescription, {
-                    gasLimit: 100000,
+                    gasLimit: 200000,
                 })
-            console.log(2)
 
             const proposeReceipt = await proposeTx.wait(1)
             const proposalId = proposeReceipt.events![0].args!.proposalId
@@ -88,20 +84,39 @@ describe.only("Governance Flow", async () => {
             await moveBlocks(VOTING_DELAY + 1)
 
             // vote
-            const voteTx = await governance.castVoteWithReason(proposalId, voteWay, reason)
+            const voteTx = await governance
+                .connect(proposer)
+                .castVoteWithReason(proposalId, voteWay, reason)
             await voteTx.wait(1)
             proposalState = await governance.state(proposalId)
+            console.log(`\n\Current Proposal State: ${proposalState}`)
             assert.equal(proposalState.toString(), "1")
-            console.log(`Current Proposal State: ${proposalState}`)
-            await moveBlocks(VOTING_PERIOD + 1)
 
+            await moveBlocks(1)
+            proposalState = await governance.state(proposalId)
+            console.log(`\n\Current Proposal State: ${proposalState}`)
+
+            await moveBlocks(1)
+            proposalState = await governance.state(proposalId)
+            console.log(`\n\Current Proposal State: ${proposalState}`)
+
+            await moveBlocks(1)
+            proposalState = await governance.state(proposalId)
+            console.log(`\n\Current Proposal State: ${proposalState}`)
+
+            await moveBlocks(1)
+            proposalState = await governance.state(proposalId)
+            console.log(`\n\Current Proposal State: ${proposalState}`)
+
+            // queue
+            proposalState = await governance.state(proposalId)
+            console.log(`Current Proposal State: ${proposalState}`)
             const descriptionHash = ethers.utils.id(proposalDescription)
-            const queueTx = await governance.queue(
-                [community.address],
-                [0],
-                [encodedFunctionCall],
-                descriptionHash
-            )
+            const queueTx = await governance
+                .connect(proposer)
+                .queue([community.address], [0], [encodedFunctionCall], descriptionHash, {
+                    gasLimit: 200000,
+                })
             await queueTx.wait(1)
             await moveTime(MIN_DELAY + 1)
             await moveBlocks(1)
@@ -109,16 +124,13 @@ describe.only("Governance Flow", async () => {
             proposalState = await governance.state(proposalId)
             console.log(`Current Proposal State: ${proposalState}`)
 
+            // execute
             console.log("Executing...")
             console.log
-            const exTx = await governance.execute(
-                [community.address],
-                [0],
-                [encodedFunctionCall],
-                descriptionHash
-            )
+            const exTx = await governance
+                .connect(proposer)
+                .execute([community.address], [0], [encodedFunctionCall], descriptionHash)
             await exTx.wait(1)
-            console.log((await community.retrieve()).toString())
         })
     })
 })

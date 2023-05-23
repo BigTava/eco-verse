@@ -3,6 +3,7 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/governance/utils/Votes.sol";
+import "hardhat/console.sol";
 
 /**
  * @dev Extension of ERC1155 to support voting and delegation as implemented by {Votes}

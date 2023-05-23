@@ -61,7 +61,6 @@ contract Governance is
         bytes[] memory calldatas,
         string memory description
     ) public override(Governor, IGovernor) returns (uint256) {
-        console.log(10);
         return super.propose(targets, values, calldatas, description);
     }
 

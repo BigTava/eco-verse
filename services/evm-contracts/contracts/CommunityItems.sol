@@ -74,6 +74,7 @@ contract CommunityItems is ERC1155Votes, Ownable {
     ) internal view virtual override returns (uint256 totalBalance) {
         uint256[5] memory ids = getIds();
         for (uint256 i = 0; i < ids.length; i++) {
+            console.log(totalBalance);
             totalBalance += balanceOf(account, ids[i]);
         }
     }

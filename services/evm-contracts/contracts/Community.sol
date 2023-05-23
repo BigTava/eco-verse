@@ -64,6 +64,12 @@ contract Community is Ownable {
         i_name = _name;
         i_epicenter = Location(_epicenterLat, _epicenterLon);
 
+        // CommunityItems
+        i_communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
+
+        // CrowdlendingFactory
+        i_crowdlendingFactory = new CrowdlendingFactory();
+
         // TimeLock
         address[] memory proposers;
         address[] memory executors;
@@ -80,12 +86,6 @@ contract Community is Ownable {
         i_timelock.revokeRole(i_timelock.TIMELOCK_ADMIN_ROLE(), address(this));
 
         transferOwnership(address(i_timelock));
-
-        // CommunityItems
-        i_communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
-
-        // CrowdlendingFactory
-        i_crowdlendingFactory = new CrowdlendingFactory();
     }
 
     function enterCommunity(int256 _locationLat, int256 _locatinoLon) public onlyOwner {
