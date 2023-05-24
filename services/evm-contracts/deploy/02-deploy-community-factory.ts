@@ -14,7 +14,7 @@ const deployCommunityFactory: DeployFunction = async function (hre: HardhatRunti
         : VERIFICATION_BLOCK_CONFIRMATIONS
 
     const args: any[] = []
-    const raffle = await deploy("CommunityFactory", {
+    const communityFactory = await deploy("CommunityFactory", {
         from: deployer,
         args: args,
         log: true,
@@ -24,7 +24,7 @@ const deployCommunityFactory: DeployFunction = async function (hre: HardhatRunti
     // Verify the deployment
     if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
         log("Verifying...")
-        await verify(raffle.address, args)
+        await verify(communityFactory.address, args)
     }
 
     log("----------------------------------------------------")

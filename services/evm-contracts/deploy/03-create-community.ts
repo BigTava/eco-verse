@@ -23,8 +23,7 @@ const createCommunity: DeployFunction = async function (hre: HardhatRuntimeEnvir
         VOTING_PERIOD,
         VOTING_DELAY,
     ]
-    log("----------------------------------------------------")
-    log("Creating community...")
+    log(`Creating community named ${NAME}...`)
     const transactionResponse = await communityFactory.createCommunity(...args)
     const transactionReceipt = await transactionResponse.wait(1)
 
@@ -35,4 +34,4 @@ const createCommunity: DeployFunction = async function (hre: HardhatRuntimeEnvir
 }
 export default createCommunity
 createCommunity.tags = ["all", "createCommunity"]
-createCommunity.dependencies = ["communityFactory"]
+createCommunity.dependencies = ["communityFactory", "crowdlendingFactory"]

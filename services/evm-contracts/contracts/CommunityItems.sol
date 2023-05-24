@@ -36,7 +36,7 @@ contract CommunityItems is ERC1155Votes, Ownable {
         _mint(_member, _membershipId, 1, "0x000");
     }
 
-    function mintCreatprMembership(address _creator) public onlyOwner {
+    function mintCreatorMembership(address _creator) public onlyOwner {
         mintMembership(_creator, CREATOR_MEMBERSHIP);
     }
 
@@ -71,10 +71,9 @@ contract CommunityItems is ERC1155Votes, Ownable {
      */
     function _getVotingUnits(
         address account
-    ) internal view virtual override returns (uint256 totalBalance) {
+    ) internal view override returns (uint256 totalBalance) {
         uint256[5] memory ids = getIds();
         for (uint256 i = 0; i < ids.length; i++) {
-            console.log(totalBalance);
             totalBalance += balanceOf(account, ids[i]);
         }
     }

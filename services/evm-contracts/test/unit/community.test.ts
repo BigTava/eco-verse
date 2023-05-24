@@ -1,5 +1,10 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
-import { CommunityFactory, Community, TimeLock } from "../../typechain/contracts"
+import {
+    CommunityFactory,
+    Community,
+    CrowdlendingFactory,
+    TimeLock,
+} from "../../typechain/contracts"
 import { deployments, ethers, network } from "hardhat"
 import { developmentChains } from "../../helper-hardhat-config"
 import { assert, expect } from "chai"
@@ -14,6 +19,7 @@ import { NAME, EPICENTER_LAT, EPICENTER_LON } from "../../constants/community"
 !developmentChains.includes(network.name)
     ? describe.skip
     : describe("Community Factory", async () => {
+          let crowdlendingFactory: CrowdlendingFactory
           let communityFactory: CommunityFactory
           let community: Community
           let deployer: SignerWithAddress
@@ -24,7 +30,7 @@ import { NAME, EPICENTER_LAT, EPICENTER_LON } from "../../constants/community"
               accounts = await ethers.getSigners()
               deployer = accounts[0]
               creator = accounts[1]
-              await deployments.fixture(["communityFactory"])
+              await deployments.fixture(["crowdlendingFactory", "communityFactory"])
 
               communityFactory = await ethers.getContract("CommunityFactory", deployer.address)
           })

@@ -40,6 +40,7 @@ contract CommunityFactory {
             _name,
             _epicenterLon,
             _epicenterLat,
+            msg.sender,
             _uri,
             _nameEIP721,
             _versionEIP721,

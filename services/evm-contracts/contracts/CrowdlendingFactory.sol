@@ -7,8 +7,16 @@ import "hardhat/console.sol";
 import "./Crowdlending.sol";
 
 contract CrowdlendingFactory is Ownable {
+    //----------------- Type declarations -----------------
+
+    //----------------- State variables -------------------
     address[] private allCampaigns;
 
+    //----------------- Events ----------------------------
+
+    //----------------- Modifiers -------------------------
+
+    //----------------- Functions -------------------------
     constructor() {}
 
     function createCampaign(
@@ -25,6 +33,7 @@ contract CrowdlendingFactory is Ownable {
         allCampaigns.push(campaignAddress);
     }
 
+    /* Getter Functions */
     function getAllCampaigns() public view returns (address[] memory) {
         return allCampaigns;
     }

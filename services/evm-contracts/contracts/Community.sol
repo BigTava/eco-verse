@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 import "./Governance.sol";
 import "./CommunityItems.sol";
-import "./CrowdlendingFactory.sol";
+import "./interfaces/ICrowdlendingFactory.sol";
 
 /* Errors */
 error Community__MemberIsInCommunity();
@@ -37,9 +37,9 @@ contract Community is Ownable {
     string private i_name;
     Location private i_epicenter;
     CommunityItems private i_communityItems;
-    CrowdlendingFactory private i_crowdlendingFactory;
     TimelockController private i_timelock;
     Governance private i_governance;
+    ICrowdlendingFactory private s_crowdlendingFactory;
 
     mapping(address => Member) private s_members; // member -> details
 
@@ -53,6 +53,7 @@ contract Community is Ownable {
         string memory _name,
         int256 _epicenterLat,
         int256 _epicenterLon,
+        address creator,
         string memory _uri,
         string memory _nameEIP721,
         string memory _versionEIP721,
@@ -66,9 +67,7 @@ contract Community is Ownable {
 
         // CommunityItems
         i_communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
-
-        // CrowdlendingFactory
-        i_crowdlendingFactory = new CrowdlendingFactory();
+        i_communityItems.mintCreatorMembership(creator);
 
         // TimeLock
         address[] memory proposers;
@@ -97,6 +96,11 @@ contract Community is Ownable {
         s_members[msg.sender] = Member(Location(_locationLat, _locatinoLon), MemberStatus.PENDING);
     }
 
+    /* Setter Functions */
+    function setCrowdlendingFactory(address _crowdlendingFactory) public onlyOwner {
+        s_crowdlendingFactory = ICrowdlendingFactory(_crowdlendingFactory);
+    }
+
     /* Getter Functions */
     function getEpicenter() public view returns (int256, int256) {
         return (i_epicenter.lat, i_epicenter.lon);
@@ -111,7 +115,7 @@ contract Community is Ownable {
     }
 
     function getCrowdlendingFactory() public view returns (address) {
-        return address(i_crowdlendingFactory);
+        return address(s_crowdlendingFactory);
     }
 
     function getTimelock() public view returns (address) {
