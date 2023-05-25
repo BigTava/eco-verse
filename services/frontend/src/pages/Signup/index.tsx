@@ -1,7 +1,7 @@
-import { AuthLayout } from "src/components/Layouts/AuthLayout";
-import { DefaultButton } from "src/components/Buttons/DefaultButton";
-import { SelectField, TextField } from "src/components/Fields";
-import Logo from "src/components/Logo";
+import { AuthLayout } from "components/Layouts/AuthLayout";
+import { DefaultButton } from "components/Buttons/DefaultButton";
+import { SelectField, TextField } from "components/Fields";
+import Logo from "components/Logo";
 /*eslint-disable*/
 const Signup = () => {
   console.log("dasda");
@@ -84,7 +84,7 @@ const Signup = () => {
             <DefaultButton
               type="submit"
               variant="solid"
-              color="blue"
+              color="white"
               className="w-full"
             >
               <span>

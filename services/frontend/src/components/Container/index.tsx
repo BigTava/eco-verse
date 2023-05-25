@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import clsx from "clsx";
 
 type ContainerProps = {
   className?: string;
@@ -8,9 +9,11 @@ type ContainerProps = {
 const Container: React.FC<ContainerProps> = (props) => {
   return (
     <div
-      className={`container mx-auto p-8 xl:px-0 ${
-        props.className ? props.className : ""
-      }`}
+      {...props}
+      className={clsx(
+        "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8",
+        props.className
+      )}
     >
       {props.children}
     </div>

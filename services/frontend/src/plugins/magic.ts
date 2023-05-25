@@ -1,5 +1,5 @@
 import { EthNetworkConfiguration, Magic } from "magic-sdk";
-import { Networks } from "src/utils/networks";
+import { Networks } from "utils/networks";
 
 const formattedNetwork = (): EthNetworkConfiguration => {
   const network = localStorage.getItem("network");

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { ReactComponent as Logo } from "../../assets/logos/EnergyLogo.svg";
 import { useNavigate } from "react-router-dom";
-import Login from "src/pages/Login";
+import Login from "pages/Login";
 import { WalletContext } from "../../context/Wallet.context";
 
 const Header = () => {
