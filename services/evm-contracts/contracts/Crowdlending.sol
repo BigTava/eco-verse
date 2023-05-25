@@ -24,6 +24,7 @@ contract Crowdlending is Ownable {
         LAUNCHED,
         COMPLETED
     }
+
     struct Campaign {
         address creator;
         uint32 apy;
