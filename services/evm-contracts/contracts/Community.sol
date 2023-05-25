@@ -53,7 +53,7 @@ contract Community is Ownable {
         string memory _name,
         int256 _epicenterLat,
         int256 _epicenterLon,
-        address creator,
+        address _creator,
         string memory _uri,
         string memory _nameEIP721,
         string memory _versionEIP721,
@@ -67,7 +67,7 @@ contract Community is Ownable {
 
         // CommunityItems
         i_communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
-        i_communityItems.mintCreatorMembership(creator);
+        i_communityItems.mintCreatorMembership(_creator);
 
         // TimeLock
         address[] memory proposers;
@@ -80,8 +80,8 @@ contract Community is Ownable {
             _votingPeriod,
             _votingDelay
         );
-        i_timelock.grantRole(i_timelock.EXECUTOR_ROLE(), address(i_governance));
-        i_timelock.grantRole(i_timelock.PROPOSER_ROLE(), address(0));
+        i_timelock.grantRole(i_timelock.EXECUTOR_ROLE(), address(0));
+        i_timelock.grantRole(i_timelock.PROPOSER_ROLE(), address(i_governance));
         i_timelock.revokeRole(i_timelock.TIMELOCK_ADMIN_ROLE(), address(this));
 
         transferOwnership(address(i_timelock));

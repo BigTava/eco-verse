@@ -92,25 +92,11 @@ describe.only("Governance Flow", async () => {
             console.log(`\n\Current Proposal State: ${proposalState}`)
             assert.equal(proposalState.toString(), "1")
 
-            await moveBlocks(1)
-            proposalState = await governance.state(proposalId)
-            console.log(`\n\Current Proposal State: ${proposalState}`)
-
-            await moveBlocks(1)
-            proposalState = await governance.state(proposalId)
-            console.log(`\n\Current Proposal State: ${proposalState}`)
-
-            await moveBlocks(1)
-            proposalState = await governance.state(proposalId)
-            console.log(`\n\Current Proposal State: ${proposalState}`)
-
-            await moveBlocks(1)
-            proposalState = await governance.state(proposalId)
-            console.log(`\n\Current Proposal State: ${proposalState}`)
+            await moveBlocks(VOTING_PERIOD + 1)
 
             // queue
             proposalState = await governance.state(proposalId)
-            console.log(`Current Proposal State: ${proposalState}`)
+            console.log(`\n\Current Proposal State: ${proposalState}`)
             const descriptionHash = ethers.utils.id(proposalDescription)
             const queueTx = await governance
                 .connect(proposer)

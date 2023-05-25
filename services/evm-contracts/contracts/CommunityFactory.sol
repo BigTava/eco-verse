@@ -52,6 +52,7 @@ contract CommunityFactory {
 
         address communityAddress = address(newCommunity);
         allCommunities.push(communityAddress);
+
         emit NewCommunity(communityAddress, _epicenterLon, _epicenterLat);
     }
 

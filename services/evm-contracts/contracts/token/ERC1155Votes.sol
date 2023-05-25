@@ -25,14 +25,11 @@ abstract contract ERC1155Votes is ERC1155, Votes {
         uint256[] memory amounts,
         bytes memory data
     ) internal virtual override {
-        console.log("HEEEY");
-        console.log(ids[0]);
-        console.log(ids.length);
-        console.log(amounts.length);
-        super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
-        console.log("HEEEY");
+        uint256 totalBalance;
         for (uint256 i = 0; i < ids.length; i++) {
-            _transferVotingUnits(from, to, amounts[i]);
+            totalBalance += amounts[i];
         }
+        _transferVotingUnits(from, to, totalBalance);
+        super._afterTokenTransfer(operator, from, to, ids, amounts, data);
     }
 }

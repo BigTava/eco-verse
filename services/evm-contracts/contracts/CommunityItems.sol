@@ -34,6 +34,7 @@ contract CommunityItems is ERC1155Votes, Ownable {
             revert CommunityItems__MemberAlreadyHasThisMembership();
         }
         _mint(_member, _membershipId, 1, "0x000");
+        _delegate(_member, _member);
     }
 
     function mintCreatorMembership(address _creator) public onlyOwner {
