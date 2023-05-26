@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, SyntheticEvent } from "react";
 import clsx from "clsx";
 
 import { baseStyles, variantStyles } from "./styles";
@@ -10,6 +10,7 @@ type DefaultButtonProps = {
   href?: string;
   type?: "button" | "submit" | "reset";
   children?: React.ReactNode;
+  onClick?: (event: SyntheticEvent<HTMLButtonElement>) => void;
 };
 
 /*eslint-disable*/
@@ -19,6 +20,7 @@ export const DefaultButton = forwardRef(function Button(
     color = "gray",
     className,
     href,
+    onClick,
     ...props
   }: DefaultButtonProps,
   ref: any
@@ -32,6 +34,6 @@ export const DefaultButton = forwardRef(function Button(
   return href ? (
     <a ref={ref} href={href} className={className} {...props} />
   ) : (
-    <button ref={ref} className={className} {...props} />
+    <button ref={ref} className={className} {...props} onClick={onClick} />
   );
 });

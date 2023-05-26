@@ -1,101 +1,70 @@
+// Components
 import { AuthLayout } from "components/Layouts/AuthLayout";
 import { DefaultButton } from "components/Buttons/DefaultButton";
 import { SelectField, TextField } from "components/Fields";
-import Logo from "components/Logo";
-/*eslint-disable*/
-const Signup = () => {
-  console.log("dasda");
+import Navigation from "./Navigation";
+
+export default function Singup() {
   return (
     <>
       <head>
-        <title>Sign Up - TaxPal</title>
+        <title>Create Community - EcoVerse</title>
       </head>
-      <AuthLayout>
-        <div className="flex flex-col">
-          <a href="/" aria-label="Home">
-            <Logo className="h-10 w-auto" />
-          </a>
-          <div className="mt-20">
-            <h2 className="text-lg font-semibold text-gray-900">
-              Get started for free
-            </h2>
-            <p className="mt-2 text-sm text-gray-700">
-              Already registered?{" "}
-              <a
-                href="/login"
-                className="font-medium text-blue-600 hover:underline"
-              >
-                Sign in
-              </a>{" "}
-              to your account.
-            </p>
-          </div>
-        </div>
-        <form
-          action="#"
-          className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
-        >
-          <TextField
-            label="First name"
-            id="first_name"
-            name="first_name"
-            type="text"
-            autoComplete="given-name"
-            required
-          />
-          <TextField
-            label="Last name"
-            id="last_name"
-            name="last_name"
-            type="text"
-            autoComplete="family-name"
-            required
-          />
-          <TextField
-            className="col-span-full"
-            label="Email address"
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
-          <TextField
-            className="col-span-full"
-            label="Password"
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            required
-          />
-          <SelectField
-            className="col-span-full"
-            label="How did you hear about us?"
-            id="referral_source"
-            name="referral_source"
-          >
-            <option>AltaVista search</option>
-            <option>Super Bowl commercial</option>
-            <option>Our route 34 city bus ad</option>
-            <option>The “Never Use This” podcast</option>
-          </SelectField>
-          <div className="col-span-full">
-            <DefaultButton
-              type="submit"
-              variant="solid"
-              color="white"
-              className="w-full"
+      <AuthLayout title="Create a community">
+        <Navigation />
+        <form>
+          <div className="grid grid-cols-2 gap-6">
+            <TextField
+              label="First name"
+              id="first_name"
+              name="first_name"
+              type="text"
+              autoComplete="given-name"
+              required
+            />
+            <TextField
+              label="Last name"
+              id="last_name"
+              name="last_name"
+              type="text"
+              autoComplete="family-name"
+              required
+            />
+            <TextField
+              className="col-span-full"
+              label="Email address"
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+            />
+            <TextField
+              className="col-span-full"
+              label="Password"
+              id="password"
+              name="password"
+              type="password"
+              autoComplete="new-password"
+              required
+            />
+            <SelectField
+              className="col-span-full"
+              label="How did you hear about us?"
+              id="referral-source"
+              name="referral_source"
             >
-              <span>
-                Sign up <span aria-hidden="true">&rarr;</span>
-              </span>
-            </DefaultButton>
+              <option>AltaVista search</option>
+              <option>Super Bowl commercial</option>
+              <option>Our route 34 city bus ad</option>
+              <option>The “Never Use This” podcast</option>
+            </SelectField>
           </div>
+          <DefaultButton type="submit" color="cyan" className="mt-8 w-full">
+            Get started today
+          </DefaultButton>
         </form>
       </AuthLayout>
     </>
   );
-};
-
-export default Signup;
+}

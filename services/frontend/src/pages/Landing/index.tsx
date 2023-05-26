@@ -5,7 +5,7 @@ import { Hero } from "./Hero";
 // Images
 
 const Landing = () => {
-  return <Hero></Hero>;
+  return <Hero />;
 };
 
 export default Landing;

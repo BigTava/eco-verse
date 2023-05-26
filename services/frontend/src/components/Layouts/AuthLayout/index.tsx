@@ -1,27 +1,51 @@
 import React from "react";
-import backgroundImage from "src/assets/images/background-auth.jpg";
+
+function BackgroundIllustration(props) {
+  return (
+    <svg
+      viewBox="0 0 1090 1090"
+      aria-hidden="true"
+      fill="none"
+      preserveAspectRatio="none"
+      {...props}
+    >
+      <circle cx={545} cy={545} r="544.5" />
+      <circle cx={545} cy={545} r="480.5" />
+      <circle cx={545} cy={545} r="416.5" />
+      <circle cx={545} cy={545} r="352.5" />
+    </svg>
+  );
+}
 
 type AuthLayoutProps = {
+  title?: string;
+  subtitle?: string | React.ReactElement;
   children: React.ReactNode;
 };
 
-export const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
+export function AuthLayout(props: AuthLayoutProps) {
   return (
-    <>
-      <div className="relative flex min-h-full justify-center md:px-12 lg:px-0">
-        <div className="relative z-10 flex flex-1 flex-col bg-white px-4 py-10 shadow-2xl sm:justify-center md:flex-none md:px-28">
-          <div className="mx-auto w-full max-w-md sm:px-4 md:w-96 md:max-w-sm md:px-0">
-            {children}
-          </div>
-        </div>
-        <div className="hidden sm:contents lg:relative lg:block lg:flex-1">
-          <img
-            className="absolute inset-0 h-full w-full object-cover"
-            src={backgroundImage}
-            alt=""
+    <main className="flex min-h-full overflow-hidden pt-2 sm:py-4">
+      <div className="mx-auto flex w-full max-w-2xl flex-col px-4 sm:px-6">
+        <div className="relative mt-6 sm:mt-8">
+          <BackgroundIllustration
+            width="1090"
+            height="1090"
+            className="absolute -top-7 left-1/2 -z-10 h-[788px] -translate-x-1/2 stroke-gray-300/30 [mask-image:linear-gradient(to_bottom,white_20%,transparent_75%)] sm:-top-9 sm:h-auto"
           />
+          <h1 className="text-center text-2xl font-medium tracking-tight text-gray-900">
+            {props.title}
+          </h1>
+          {props.subtitle && (
+            <p className="mt-3 text-center text-lg text-gray-600">
+              {props.subtitle}
+            </p>
+          )}
+        </div>
+        <div className="-mx-4 mt-4 flex-auto bg-white px-4 py-10 shadow-2xl shadow-gray-900/10 sm:mx-0 sm:flex-none sm:rounded-5xl sm:p-24">
+          {props.children}
         </div>
       </div>
-    </>
+    </main>
   );
-};
+}
