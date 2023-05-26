@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 import "./Community.sol";
 import "./interfaces/ITablelandTables.sol";
-import "./utils/SQLHelpers.sol";
 
 /** @title Energy Community Factory Contract
  *  @author EcoVerse
@@ -23,7 +22,7 @@ contract CommunityFactory is ERC721Holder {
     uint256 private communityTableId;
 
     //----------------- Events ----------------------------
-    event NewCommunity(address indexed community, int256 epicenterLon, int256 epicenterLat);
+    event NewCommunity(address indexed community, uint256 epicenterLon, uint256 epicenterLat);
 
     //----------------- Modifiers -------------------------
 
@@ -33,27 +32,31 @@ contract CommunityFactory is ERC721Holder {
 
         communityTableId = tableland.create(
             address(this),
-            SQLHelpers.toCreateFromSchema("id integer primary key, name text, integer epicenterLon, integer epicenterLat", "Community")
+            string.concat(
+                "CREATE TABLE ",
+                "Community",
+                "_",
+                Strings.toString(block.chainid),
+                " (id integer primary key, name text, integer epicenterLon, integer epicenterLat);"
+            )
         );
-
-
     }
 
     function createCommunity(
         uint256 _id,
-        string memory _name,
-        int256 _epicenterLon,
-        int256 _epicenterLat,
-        string memory _uri,
-        string memory _nameEIP721,
-        string memory _versionEIP721,
+        string calldata _name,
+        uint256 _epicenterLon,
+        uint256 _epicenterLat,
+        string calldata _uri,
+        string calldata _nameEIP721,
+        string calldata _versionEIP721,
         uint256 _minDelay,
         uint256 _quorumPercentage,
         uint256 _votingPeriod,
         uint256 _votingDelay
     ) public {
         Community newCommunity = new Community(
-            _id
+            _id,
             msg.sender,
             _uri,
             _nameEIP721,
@@ -64,14 +67,28 @@ contract CommunityFactory is ERC721Holder {
             _votingDelay
         );
 
-        tableland.mutate(address(this),communityTableId,
-        SQLHelpers.toInsert("Community",communityTableId,"name, epicenterLon, epicenterLat",string.concat(_name,Strings.toString(_epicenterLon),Strings.toString(_epicenterLat))));
-        
-
         address communityAddress = address(newCommunity);
         allCommunities.push(communityAddress);
 
+        addCommunityToDb(_name, _epicenterLon, _epicenterLat);
+
         emit NewCommunity(communityAddress, _epicenterLon, _epicenterLat);
+    }
+
+    function addCommunityToDb(string calldata _name, uint256 _lon, uint256 _lat) internal {
+        tableland.mutate(
+            address(this),
+            communityTableId,
+            string.concat(
+                "INSERT INTO ",
+                "Community",
+                "(",
+                "name, epicenterLon, epicenterLat",
+                ")VALUES(",
+                string.concat(_name, Strings.toString(_lon), Strings.toString(_lat)),
+                ")"
+            )
+        );
     }
 
     /* Getter Functions */
