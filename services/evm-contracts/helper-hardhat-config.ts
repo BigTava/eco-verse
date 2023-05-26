@@ -37,5 +37,17 @@ export const networkConfig: networkConfigInfo = {
     },
 }
 
+export interface tablelandConfigItem {
+    tableland: string
+}
+export interface tablelandConfigInfo {
+    [key: string]: tablelandConfigItem
+}
+
+export const tablelandDirectory = {
+    sepolia: { tableland: "0xc50C62498448ACc8dBdE43DA77f8D5D2E2c7597D" },
+    mainnet: { tableland: "0x012969f7e3439a9B04025b5a049EB9BAD82A8C12" },
+}
+
 export const developmentChains = ["hardhat", "localhost"]
 export const VERIFICATION_BLOCK_CONFIRMATIONS = 6
