@@ -34,11 +34,12 @@ contract Community is Ownable {
     }
 
     //----------------- State variables -------------------
-    uint256 private immutable i_id;
-    TimelockController private immutable i_timelock;
-    Governance private immutable i_governance;
+    string private i_name;
+    Location private i_epicenter;
+    CommunityItems private i_communityItems;
+    TimelockController private i_timelock;
+    Governance private i_governance;
     ICrowdlendingFactory private s_crowdlendingFactory;
-    CommunityItems private communityItems;
 
     mapping(address => Member) private s_members; // member -> details
 
@@ -49,7 +50,9 @@ contract Community is Ownable {
 
     //----------------- Functions -------------------------
     constructor(
-        uint256 _id,
+        string memory _name,
+        int256 _epicenterLat,
+        int256 _epicenterLon,
         address _creator,
         string memory _uri,
         string memory _nameEIP721,
@@ -59,18 +62,19 @@ contract Community is Ownable {
         uint256 _votingPeriod,
         uint256 _votingDelay
     ) {
-        i_id = _id;
+        i_name = _name;
+        i_epicenter = Location(_epicenterLat, _epicenterLon);
 
         // CommunityItems
-        communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
-        communityItems.mintCreatorMembership(_creator);
+        i_communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
+        i_communityItems.mintCreatorMembership(_creator);
 
         // TimeLock
         address[] memory proposers;
         address[] memory executors;
         i_timelock = new TimelockController(_minDelay, proposers, executors, address(this));
         i_governance = new Governance(
-            communityItems,
+            i_communityItems,
             i_timelock,
             _quorumPercentage,
             _votingPeriod,
@@ -97,8 +101,17 @@ contract Community is Ownable {
         s_crowdlendingFactory = ICrowdlendingFactory(_crowdlendingFactory);
     }
 
+    /* Getter Functions */
+    function getEpicenter() public view returns (int256, int256) {
+        return (i_epicenter.lat, i_epicenter.lon);
+    }
+
+    function getName() public view returns (string memory) {
+        return i_name;
+    }
+
     function getCommunityItems() public view returns (address) {
-        return address(communityItems);
+        return address(i_communityItems);
     }
 
     function getCrowdlendingFactory() public view returns (address) {
