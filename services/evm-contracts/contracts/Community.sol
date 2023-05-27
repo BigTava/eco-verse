@@ -50,10 +50,9 @@ contract Community is Ownable {
     //----------------- Functions -------------------------
     constructor(
         uint256 _id,
+        string memory _name,
         address _creator,
         string memory _uri,
-        string memory _nameEIP721,
-        string memory _versionEIP721,
         uint256 _minDelay,
         uint256 _quorumPercentage,
         uint256 _votingPeriod,
@@ -62,7 +61,7 @@ contract Community is Ownable {
         i_id = _id;
 
         // CommunityItems
-        communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
+        communityItems = new CommunityItems(_uri, _name);
         communityItems.mintCreatorMembership(_creator);
 
         // TimeLock

@@ -48,8 +48,6 @@ contract CommunityFactory is ERC721Holder {
         uint256 _epicenterLon,
         uint256 _epicenterLat,
         string calldata _uri,
-        string calldata _nameEIP721,
-        string calldata _versionEIP721,
         uint256 _minDelay,
         uint256 _quorumPercentage,
         uint256 _votingPeriod,
@@ -57,10 +55,9 @@ contract CommunityFactory is ERC721Holder {
     ) public {
         Community newCommunity = new Community(
             _id,
+            _name,
             msg.sender,
             _uri,
-            _nameEIP721,
-            _versionEIP721,
             _minDelay,
             _quorumPercentage,
             _votingPeriod,

@@ -23,11 +23,7 @@ contract CommunityItems is ERC1155Votes, Ownable {
     //----------------- Modifiers -------------------------
 
     //----------------- Functions -------------------------
-    constructor(
-        string memory _uri,
-        string memory _name,
-        string memory _version
-    ) ERC1155Votes(_uri) EIP712(_name, _version) {}
+    constructor(string memory _uri, string memory _name) ERC1155Votes(_uri) EIP712(_name, "0.1") {}
 
     function mintMembership(address _member, uint256 _membershipId) private onlyOwner {
         if (balanceOf(_member, _membershipId) > 0) {
