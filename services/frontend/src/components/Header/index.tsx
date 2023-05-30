@@ -1,55 +1,48 @@
-import React, { ReactNode } from "react";
-import { Popover } from "@headlessui/react";
-import { AnimatePresence, motion } from "framer-motion";
+// Core
+import { useState } from "react";
+import { magic } from "plugins/magic";
+import { getWeb3 } from "plugins/web3";
+import { useWeb3 } from "contexts/Web3.context";
+import { useUser } from "contexts/User.context";
 
+// Components
 import Container from "components/Container";
 import Logo from "components/Logo";
 import NavLinks from "components/NavLinks";
+import AccountModal from "components/Modals/AccountModal";
+import MobileNavLink from "./MobileNavLink";
 import { DefaultButton } from "components/Buttons/DefaultButton";
+import { AnimatePresence, motion } from "framer-motion";
+import { MenuIcon, ChevronUpIcon } from "components/Icons";
+import { Popover } from "@headlessui/react";
 
-function MenuIcon(props: any) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-      <path
-        d="M5 6h14M5 18h14M5 12h14"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+/*eslint-disable*/
+export function Header() {
+  const { setUser, user } = useUser();
+  const { setWeb3 } = useWeb3();
 
-function ChevronUpIcon(props: any) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-      <path
-        d="M17 14l-5-5-5 5"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+  const [openWalletModal, setOpenWalletModal] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState(false);
+  const isLoggedIn = user;
 
-type MobileNavLinkProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
-  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
-    children: ReactNode;
+  const connect = async () => {
+    try {
+      setDisabled(true);
+      const accounts = await magic.wallet.connectWithUI();
+      setDisabled(false);
+      console.log("Logged in user:", accounts[0]);
+      localStorage.setItem("user", accounts[0]);
+
+      const web3 = await getWeb3();
+      setWeb3(web3);
+      setUser(accounts[0]);
+    } catch (error) {
+      setDisabled(false);
+      console.error(error);
+    }
   };
 
-function MobileNavLink(props: MobileNavLinkProps) {
-  return (
-    <Popover.Button
-      className="block text-base leading-7 tracking-tight text-gray-700"
-      {...props}
-    >
-      {props.children}
-    </Popover.Button>
-  );
-}
-
-export function Header() {
+  const onCloseWalletModal = () => setOpenWalletModal(false);
   return (
     <header>
       <nav>
@@ -126,15 +119,24 @@ export function Header() {
                 </>
               )}
             </Popover>
-            <DefaultButton
-              href="/login"
-              variant="outline"
-              color="gray"
-              className="lg:block"
-            >
-              Log in
-            </DefaultButton>
+
+            <div className="col-span-1 flex w-full items-center justify-end gap-[8px] font-semibold text-green-400  ">
+              <DefaultButton
+                variant="outline"
+                color="gray"
+                className="lg:block"
+                onClick={() => {
+                  {
+                    !isLoggedIn ? connect() : setOpenWalletModal(true);
+                  }
+                }}
+                disabled={disabled}
+              >
+                {!isLoggedIn ? "Login" : "My Account"}
+              </DefaultButton>
+            </div>
           </div>
+          <AccountModal open={openWalletModal} onClose={onCloseWalletModal} />
         </Container>
       </nav>
     </header>

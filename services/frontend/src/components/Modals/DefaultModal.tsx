@@ -4,13 +4,15 @@ type ModalProps = {
   showModal: boolean;
   children: ReactNode;
   closeFunction: () => void;
+  className?: string;
 };
 
-const Modal: React.FC<ModalProps> = ({
+const DefaultModal: React.FC<ModalProps> = ({
   showModal,
   children,
   closeFunction,
-}) => {
+  ...props
+}: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -35,8 +37,13 @@ const Modal: React.FC<ModalProps> = ({
   }
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-      <div ref={modalRef} className="relative rounded-lg bg-white p-6">
+    <div
+      className={`fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75`}
+    >
+      <div
+        ref={modalRef}
+        className={`relative rounded-lg bg-white p-6 ${props.className}`}
+      >
         <button
           className="absolute top-0 right-2 p-2 text-black"
           onClick={closeFunction}
@@ -49,4 +56,4 @@ const Modal: React.FC<ModalProps> = ({
   );
 };
 
-export default Modal;
+export default DefaultModal;

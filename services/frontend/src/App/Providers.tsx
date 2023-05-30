@@ -1,7 +1,11 @@
+// Core
 import React, { FC } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import WalletProvider from "../context/Wallet.context";
-import MainProvider from "../context/Main.context";
+
+// Contexts
+import MainProvider from "contexts/Main.context";
+import { Web3ContextProvider } from "contexts/Web3.context";
+import { UserProvider } from "contexts/User.context";
 
 type ProvidersProps = {
   children: React.ReactNode;
@@ -13,7 +17,9 @@ const Providers: FC<ProvidersProps> = ({ children }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <MainProvider>
-        <WalletProvider>{children}</WalletProvider>
+        <Web3ContextProvider>
+          <UserProvider>{children}</UserProvider>
+        </Web3ContextProvider>
       </MainProvider>
     </QueryClientProvider>
   );

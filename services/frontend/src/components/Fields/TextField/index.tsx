@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import Label from "../Label";
 import { formClasses } from "../styles";
 
@@ -10,6 +10,9 @@ type TextFieldProps = {
   name?: string;
   autoComplete?: string;
   required?: boolean;
+  placeholder?: string;
+  defaultValue?: string | number | readonly string[] | undefined | null;
+  onChange?: (event: SyntheticEvent<HTMLInputElement>) => void;
 };
 
 const TextField: React.FC<TextFieldProps> = ({
@@ -17,12 +20,19 @@ const TextField: React.FC<TextFieldProps> = ({
   label,
   type = "text",
   className = "",
+  defaultValue,
   ...props
 }) => {
+  const validDefaultValue = defaultValue !== null ? defaultValue : undefined;
   return (
     <div className={className}>
       {label && <Label id={id}>{label}</Label>}
-      <input id={id} type={type} {...props} className={formClasses} />
+      <input
+        type={type}
+        defaultValue={validDefaultValue}
+        {...props}
+        className={formClasses}
+      />
     </div>
   );
 };
