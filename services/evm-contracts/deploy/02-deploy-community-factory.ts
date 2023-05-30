@@ -30,4 +30,4 @@ const deployCommunityFactory: DeployFunction = async function (hre: HardhatRunti
     log("----------------------------------------------------")
 }
 export default deployCommunityFactory
-deployCommunityFactory.tags = ["all", "communityFactory"]
+deployCommunityFactory.tags = ["all", "deploy", "communityFactory"]
