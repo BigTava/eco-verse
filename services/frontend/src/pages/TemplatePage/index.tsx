@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Modal from "../../components/Modals/DefaultModal";
-import MintButton from "../../components/Buttons/MintButton/MintButton";
 
 const TemplatePage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,8 +15,6 @@ const TemplatePage = () => {
           >
             Open modal
           </div>
-
-          <MintButton />
         </div>
       </div>
 

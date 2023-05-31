@@ -3,30 +3,17 @@ import { DeployFunction } from "hardhat-deploy/types"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import path from "path"
 
-const FRONTEND_END_ADDRESSES_FILE = path.resolve(
-    __dirname,
-    "../..",
-    "frontend",
-    "utils",
-    "constants",
-    "contractAddresses.json"
-)
+const COMMON_PATH = path.resolve(__dirname, "../..", "frontend", "src", "utils", "constants")
+
+const FRONTEND_END_ADDRESSES_FILE = path.resolve(COMMON_PATH, "contractAddresses.json")
 
 const CROWDLENDING_FACTORY_FRONTEND_END_ABI_FILE = path.resolve(
-    __dirname,
-    "../..",
-    "utils",
-    "frontend",
-    "constants",
+    COMMON_PATH,
     "crowdlendingFactoryAbi.json"
 )
 
 const COMMUNITY_FACTORY_FRONTEND_END_ABI_FILE = path.resolve(
-    __dirname,
-    "../..",
-    "utils",
-    "frontend",
-    "constants",
+    COMMON_PATH,
     "communityFactoryAbi.json"
 )
 
@@ -50,15 +37,18 @@ const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment)
         }
 
         if (contractAddresses && chainId in contractAddresses) {
-            if (!contractAddresses[chainId].includes(crowdlendingFactory.address)) {
-                contractAddresses[chainId].push(crowdlendingFactory.address)
+            if (!contractAddresses[chainId].values().includes(crowdlendingFactory.address)) {
+                contractAddresses[chainId]["crowdlendingFactory"] = crowdlendingFactory.address
             }
-            if (!contractAddresses[chainId].includes(communityFactory.address)) {
-                contractAddresses[chainId].push(communityFactory.address)
+
+            if (!contractAddresses[chainId].values().includes(communityFactory.address)) {
+                contractAddresses[chainId]["communityFactory"] = communityFactory.address
             }
         } else {
-            contractAddresses[chainId] = [crowdlendingFactory.address]
-            contractAddresses[chainId] = [communityFactory.address]
+            contractAddresses[chainId] = {
+                crowdlendingFactory: crowdlendingFactory.address,
+                communityFactory: communityFactory.address,
+            }
         }
 
         // ABI files
@@ -84,4 +74,4 @@ const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment)
 }
 
 export default updateUI
-updateUI.tags = ["all", "core", "frontend"]
+updateUI.tags = ["all", "deploy", "frontend"]

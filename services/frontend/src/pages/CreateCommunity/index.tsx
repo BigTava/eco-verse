@@ -9,12 +9,25 @@ import { DefaultButton } from "components/Buttons/DefaultButton";
 import GeneralInfo, { GeneralInfoValuesType } from "./GeneralInfo";
 import Governance, { GovernanceValuesType } from "./Governance";
 
+// Wagmi
+import {
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
+} from "wagmi";
+
+// Utils
+import { communityFactoryAbi, contractAddresses } from "utils/constants";
+import { Networks } from "utils/networks";
+
 // Others
 import Navigation from "./Navigation";
 
 /*eslint-disable*/
 
 export default function CreateCommunity() {
+  const network = localStorage.getItem("network") || Networks.Sepolia;
+  console.log(network);
   const [activeStep, setActiveStep] = useState(1);
   const [generalInfoValues, setGeneralInfoValues] =
     useState<GeneralInfoValuesType>({
@@ -29,6 +42,28 @@ export default function CreateCommunity() {
       quorumPercentage: null,
       minDelay: null,
     });
+  console.log(contractAddresses);
+  const {
+    config,
+    error: prepareError,
+    isError: isPrepareError,
+  } = usePrepareContractWrite({
+    address: contractAddresses["31337"]["communityFactory"] as `0x${string}`,
+    abi: communityFactoryAbi,
+    functionName: "createCommunity",
+  });
+
+  const { data, write, error, isError } = useContractWrite(config);
+
+  const { isLoading, isSuccess } = useWaitForTransaction({
+    hash: data?.hash,
+  });
+  console.log(isSuccess);
+  console.log(isLoading);
+  console.log(prepareError);
+  console.log(isPrepareError);
+  console.log(error);
+  console.log(isError);
 
   const canSave = () => {
     if (activeStep === 1) {
@@ -43,6 +78,11 @@ export default function CreateCommunity() {
   };
 
   const handleNext = () => {
+    if (activeStep === 2) {
+      const args = { ...generalInfoValues, ...governanceValues };
+      return write?.();
+    }
+
     setActiveStep(activeStep + 1);
   };
 

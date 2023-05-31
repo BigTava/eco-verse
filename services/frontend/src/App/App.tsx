@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Wagmi
 import { WagmiConfig, createClient, configureChains } from "wagmi";
-import { polygonMumbai } from "@wagmi/core/chains";
+import { sepolia } from "@wagmi/core/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
@@ -22,9 +22,9 @@ import Providers from "./Providers";
 import Routes from "./Routes";
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [polygonMumbai],
+  [sepolia],
   [
-    alchemyProvider({ apiKey: "IqzQnrs653IZafcYRxu894cvMbGdVO7x" }),
+    alchemyProvider({ apiKey: process.env.REACT_APP_SEPOLIA_API_KEY || "" }),
     publicProvider(),
   ]
 );

@@ -17,6 +17,7 @@ const MAINNET_RPC_URL =
 const POLYGON_MAINNET_RPC_URL =
     process.env.POLYGON_MAINNET_RPC_URL || "https://polygon-mainnet.alchemyapi.io/v2/your-api-key"
 const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL
+const MUMBAI_RPC_URL = process.env.MUMBAI_RPC_URL || ""
 
 /* Wallet KEYs */
 const PRIVATE_KEY = process.env.PRIVATE_KEY
@@ -55,6 +56,12 @@ const config: HardhatUserConfig = {
             accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
             saveDeployments: true,
             chainId: 1,
+        },
+        mumbai: {
+            url: MUMBAI_RPC_URL,
+            accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
+            saveDeployments: true,
+            chainId: 80001,
         },
         polygon: {
             url: POLYGON_MAINNET_RPC_URL,
@@ -95,6 +102,12 @@ const config: HardhatUserConfig = {
                 version: "0.4.24",
             },
         ],
+        settings: {
+            optimizer: {
+                enabled: true,
+                runs: 100,
+            },
+        },
     },
     mocha: {
         timeout: 200000, // 200 seconds max for running tests
