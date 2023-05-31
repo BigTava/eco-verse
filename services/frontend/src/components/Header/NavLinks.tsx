@@ -9,7 +9,7 @@ const NavLinks = (props: NavLinksProps) => {
 
   return (
     <>
-      {props.labels?.map(([label, href], index) => (
+      {props.labels?.map(([label, href, badge], index) => (
         <a
           key={label}
           href={href}
@@ -20,7 +20,7 @@ const NavLinks = (props: NavLinksProps) => {
           <AnimatePresence>
             {hoveredIndex === index && (
               <motion.span
-                className="absolute inset-0 rounded-lg bg-gray-100"
+                className="absolute inset-0 -z-10 rounded-lg bg-gray-100 "
                 layoutId="hoverBackground"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1, transition: { duration: 0.15 } }}
@@ -31,7 +31,16 @@ const NavLinks = (props: NavLinksProps) => {
               />
             )}
           </AnimatePresence>
-          <span className="relative z-10">{label}</span>
+          {badge ? (
+            <>
+              <span className="relative">{label}</span>
+              <span className="ml-4 inline-flex items-center rounded-md bg-green-100 px-2 py-1 text-xs font-medium text-gray-600">
+                {badge}
+              </span>
+            </>
+          ) : (
+            <span className="relative z-10">{label}</span>
+          )}
         </a>
       ))}
     </>

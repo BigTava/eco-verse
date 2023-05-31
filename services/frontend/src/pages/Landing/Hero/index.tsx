@@ -1,6 +1,7 @@
 // Core
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
+
 // Components
 import GithubIcon from "components/Icons/Github";
 import BackgroundIllustration from "./BackgroundIllustration";
@@ -34,7 +35,10 @@ export function Hero() {
               when to sell to avoid painful losses.
             </p>
             <div className="mt-8 flex flex-wrap gap-x-6 gap-y-4">
-              <Button onClick={() => navigate("/signup")} variant="solid">
+              <Button
+                onClick={() => navigate("/create-community")}
+                variant="solid"
+              >
                 Create Community
               </Button>
               <Button

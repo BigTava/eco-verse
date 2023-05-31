@@ -42,7 +42,7 @@ export default function CreateCommunity() {
       quorumPercentage: null,
       minDelay: null,
     });
-  console.log(contractAddresses);
+
   const {
     config,
     error: prepareError,
@@ -51,6 +51,13 @@ export default function CreateCommunity() {
     address: contractAddresses["31337"]["communityFactory"] as `0x${string}`,
     abi: communityFactoryAbi,
     functionName: "createCommunity",
+    args: [
+      ...Object.values(generalInfoValues),
+      "",
+      "",
+      "",
+      ...Object.values(governanceValues),
+    ],
   });
 
   const { data, write, error, isError } = useContractWrite(config);
@@ -58,12 +65,6 @@ export default function CreateCommunity() {
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
-  console.log(isSuccess);
-  console.log(isLoading);
-  console.log(prepareError);
-  console.log(isPrepareError);
-  console.log(error);
-  console.log(isError);
 
   const canSave = () => {
     if (activeStep === 1) {
@@ -77,10 +78,15 @@ export default function CreateCommunity() {
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (activeStep === 2) {
       const args = { ...generalInfoValues, ...governanceValues };
-      return write?.();
+      try {
+        write?.();
+        return;
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     setActiveStep(activeStep + 1);

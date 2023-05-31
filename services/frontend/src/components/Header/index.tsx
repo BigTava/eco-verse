@@ -8,7 +8,7 @@ import { useUser } from "contexts/User.context";
 // Components
 import Container from "components/Container";
 import Logo from "components/Logo";
-import NavLinks from "components/NavLinks";
+import NavLinks from "components/Header/NavLinks";
 import AccountModal from "components/Modals/AccountModal";
 import MobileNavLink from "./MobileNavLink";
 import { DefaultButton } from "components/Buttons/DefaultButton";
@@ -16,7 +16,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { MenuIcon, ChevronUpIcon } from "components/Icons";
 import { Popover } from "@headlessui/react";
 
-/*eslint-disable*/
 export function Header() {
   const { setUser, user } = useUser();
   const { setWeb3 } = useWeb3();
@@ -30,7 +29,6 @@ export function Header() {
       setDisabled(true);
       const accounts = await magic.wallet.connectWithUI();
       setDisabled(false);
-      console.log("Logged in user:", accounts[0]);
       localStorage.setItem("user", accounts[0]);
 
       const web3 = await getWeb3();
@@ -38,7 +36,6 @@ export function Header() {
       setUser(accounts[0]);
     } catch (error) {
       setDisabled(false);
-      console.error(error);
     }
   };
 
@@ -51,7 +48,12 @@ export function Header() {
             <a href="/" aria-label="Home">
               <Logo className="h-10 w-auto" />
             </a>
-            <NavLinks labels={[["Discover", "#discover"]]} />
+            <NavLinks
+              labels={[
+                ["Discover", "#discover"],
+                ["Invest", "open-campaigns", "API > 10%"],
+              ]}
+            />
           </div>
           <div className="flex items-center gap-6">
             <Popover className="lg:hidden">
