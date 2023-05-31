@@ -53,9 +53,6 @@ const config: HardhatUserConfig = {
         mainnet: {
             url: MAINNET_RPC_URL,
             accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
-            //   accounts: {
-            //     mnemonic: MNEMONIC,
-            //   },
             saveDeployments: true,
             chainId: 1,
         },
@@ -67,9 +64,7 @@ const config: HardhatUserConfig = {
         },
     },
     etherscan: {
-        // yarn hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
         apiKey: {
-            // npx hardhat verify --list-networks
             sepolia: ETHERSCAN_API_KEY,
             mainnet: ETHERSCAN_API_KEY,
             polygon: POLYGONSCAN_API_KEY,

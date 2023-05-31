@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import Modal from "../../components/Modal/Modal";
-import ConnectButton from "../../components/Buttons/ConnectButton/ConnectButton";
+import Modal from "../../components/Modals/DefaultModal";
 import MintButton from "../../components/Buttons/MintButton/MintButton";
 
 const TemplatePage = () => {
@@ -9,9 +8,6 @@ const TemplatePage = () => {
   return (
     <>
       <div className="flex h-screen w-screen flex-col bg-yellow-100">
-        <div className="flex justify-end bg-blue-100 p-4">
-          <ConnectButton />
-        </div>
         <div className="flex flex-col items-center">
           <h1 className="p-10 text-center text-3xl">Tailwind Template </h1>
           <div

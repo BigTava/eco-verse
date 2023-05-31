@@ -11,9 +11,9 @@ type DefaultButtonProps = {
   type?: "button" | "submit" | "reset";
   children?: React.ReactNode;
   onClick?: (event: SyntheticEvent<HTMLButtonElement>) => void;
+  disabled?: boolean;
 };
 
-/*eslint-disable*/
 export const DefaultButton = forwardRef(function Button(
   {
     variant = "solid",
@@ -34,6 +34,6 @@ export const DefaultButton = forwardRef(function Button(
   return href ? (
     <a ref={ref} href={href} className={className} {...props} />
   ) : (
-    <button ref={ref} className={className} {...props} onClick={onClick} />
+    <button ref={ref} className={className} onClick={onClick} {...props} />
   );
 });

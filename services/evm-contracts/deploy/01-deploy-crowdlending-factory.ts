@@ -30,4 +30,4 @@ const deployCrowdlendingFactory: DeployFunction = async function (hre: HardhatRu
     log("----------------------------------------------------")
 }
 export default deployCrowdlendingFactory
-deployCrowdlendingFactory.tags = ["all", "crowdlendingFactory"]
+deployCrowdlendingFactory.tags = ["all", "deploy", "crowdlendingFactory"]

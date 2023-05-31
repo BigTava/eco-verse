@@ -1,21 +1,32 @@
 import { CheckIcon } from "@heroicons/react/20/solid";
 
-const steps = [
-  { name: "Step 1", href: "#", status: "complete" },
-  { name: "Step 2", href: "#", status: "complete" },
-  { name: "Step 3", href: "#", status: "current" },
-  { name: "Step 4", href: "#", status: "upcoming" },
-  { name: "Step 5", href: "#", status: "upcoming" },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Navigation() {
+type NavigationProps = {
+  activeStep: number;
+  setActiveStep: (activeStep: number) => void;
+};
+
+function getStatus(myStep: number, activeStep: number) {
+  if (myStep === activeStep) {
+    return "current";
+  } else if (myStep < activeStep) {
+    return "complete";
+  } else {
+    return "upcoming";
+  }
+}
+export default function Navigation(props: NavigationProps) {
+  const steps = [
+    { name: "1", href: "#", status: getStatus(1, props.activeStep) },
+    { name: "2", href: "#", status: getStatus(2, props.activeStep) },
+    { name: "3", href: "#", status: getStatus(3, props.activeStep) },
+  ];
   return (
     <nav aria-label="Progress">
-      <ol role="list" className="flex items-center">
+      <ol role="list" className="mx-auto flex items-center justify-center">
         {steps.map((step, stepIdx) => (
           <li
             key={step.name}
@@ -23,6 +34,7 @@ export default function Navigation() {
               stepIdx !== steps.length - 1 ? "pr-8 sm:pr-20" : "",
               "relative"
             )}
+            onClick={() => props.setActiveStep(parseInt(step.name))}
           >
             {step.status === "complete" ? (
               <>
