@@ -27,28 +27,9 @@ contract CommunityFactory {
     function createCommunity(
         string memory _name,
         int256 _epicenterLon,
-        int256 _epicenterLat,
-        string memory _uri,
-        string memory _nameEIP721,
-        string memory _versionEIP721,
-        uint256 _minDelay,
-        uint256 _quorumPercentage,
-        uint256 _votingPeriod,
-        uint256 _votingDelay
+        int256 _epicenterLat
     ) public {
-        Community newCommunity = new Community(
-            _name,
-            _epicenterLon,
-            _epicenterLat,
-            msg.sender,
-            _uri,
-            _nameEIP721,
-            _versionEIP721,
-            _minDelay,
-            _quorumPercentage,
-            _votingPeriod,
-            _votingDelay
-        );
+        Community newCommunity = new Community(_name, _epicenterLon, _epicenterLat, msg.sender);
 
         address communityAddress = address(newCommunity);
         allCommunities.push(communityAddress);

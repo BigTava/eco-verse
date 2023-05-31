@@ -37,11 +37,11 @@ const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment)
         }
 
         if (contractAddresses && chainId in contractAddresses) {
-            if (!contractAddresses[chainId].values().includes(crowdlendingFactory.address)) {
+            if (!Object.values(contractAddresses[chainId]).includes(crowdlendingFactory.address)) {
                 contractAddresses[chainId]["crowdlendingFactory"] = crowdlendingFactory.address
             }
 
-            if (!contractAddresses[chainId].values().includes(communityFactory.address)) {
+            if (!Object.values(contractAddresses[chainId]).includes(communityFactory.address)) {
                 contractAddresses[chainId]["communityFactory"] = communityFactory.address
             }
         } else {
@@ -74,4 +74,4 @@ const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment)
 }
 
 export default updateUI
-updateUI.tags = ["all", "deploy", "frontend"]
+updateUI.tags = ["all", "frontend"]

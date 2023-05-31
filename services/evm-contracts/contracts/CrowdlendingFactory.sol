@@ -28,6 +28,7 @@ contract CrowdlendingFactory is Ownable {
         uint256 _endAt
     ) public onlyOwner returns (address campaignAddress) {
         Crowdlending newCampaign = new Crowdlending(_token);
+
         newCampaign.launch(_owner, _apy, _goal, _startAt, _endAt);
         campaignAddress = address(newCampaign);
         allCampaigns.push(campaignAddress);

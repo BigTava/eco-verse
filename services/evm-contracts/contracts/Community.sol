@@ -30,6 +30,7 @@ contract Community is Ownable {
 
     struct Member {
         Location location;
+        string _memberIdentifier;
         MemberStatus status;
     }
 
@@ -37,63 +38,70 @@ contract Community is Ownable {
     string private i_name;
     Location private i_epicenter;
     CommunityItems private i_communityItems;
-    TimelockController private i_timelock;
-    Governance private i_governance;
+    TimelockController private s_timelock;
+    Governance private s_governance;
     ICrowdlendingFactory private s_crowdlendingFactory;
 
     mapping(address => Member) private s_members; // member -> details
 
     //----------------- Events ----------------------------
     event MemberEnter(address indexed member);
+    event GovernanceCreation(address indexed governance, address indexed timelock);
 
     //----------------- Modifiers -------------------------
 
     //----------------- Functions -------------------------
-    constructor(
-        string memory _name,
-        int256 _epicenterLat,
-        int256 _epicenterLon,
-        address _creator,
-        string memory _uri,
-        string memory _nameEIP721,
-        string memory _versionEIP721,
-        uint256 _minDelay,
-        uint256 _quorumPercentage,
-        uint256 _votingPeriod,
-        uint256 _votingDelay
-    ) {
+    constructor(string memory _name, int256 _epicenterLat, int256 _epicenterLon, address _creator) {
         i_name = _name;
         i_epicenter = Location(_epicenterLat, _epicenterLon);
 
         // CommunityItems
-        i_communityItems = new CommunityItems(_uri, _nameEIP721, _versionEIP721);
+        i_communityItems = new CommunityItems("", "", "");
         i_communityItems.mintCreatorMembership(_creator);
 
-        // TimeLock
+        transferOwnership(_creator);
+    }
+
+    function createGovernance(
+        uint256 _minDelay,
+        uint256 _quorumPercentage,
+        uint256 _votingPeriod,
+        uint256 _votingDelay
+    ) public onlyOwner {
         address[] memory proposers;
         address[] memory executors;
-        i_timelock = new TimelockController(_minDelay, proposers, executors, address(this));
-        i_governance = new Governance(
+        s_timelock = new TimelockController(_minDelay, proposers, executors, address(this));
+        s_governance = new Governance(
             i_communityItems,
-            i_timelock,
+            s_timelock,
             _quorumPercentage,
             _votingPeriod,
             _votingDelay
         );
-        i_timelock.grantRole(i_timelock.EXECUTOR_ROLE(), address(0));
-        i_timelock.grantRole(i_timelock.PROPOSER_ROLE(), address(i_governance));
-        i_timelock.revokeRole(i_timelock.TIMELOCK_ADMIN_ROLE(), address(this));
+        s_timelock.grantRole(s_timelock.EXECUTOR_ROLE(), address(0));
+        s_timelock.grantRole(s_timelock.PROPOSER_ROLE(), address(s_governance));
+        s_timelock.revokeRole(s_timelock.TIMELOCK_ADMIN_ROLE(), address(this));
 
-        transferOwnership(address(i_timelock));
+        transferOwnership(address(s_timelock));
+
+        emit GovernanceCreation(address(s_governance), address(s_timelock));
     }
 
-    function enterCommunity(int256 _locationLat, int256 _locatinoLon) public onlyOwner {
+    function enterCommunity(
+        int256 _locationLat,
+        int256 _locatinoLon,
+        string memory _meterId
+    ) public onlyOwner {
         Member memory newMember = s_members[msg.sender];
 
         if (newMember.status != MemberStatus.INACTIVE) {
             revert Community__MemberIsInCommunity();
         }
-        s_members[msg.sender] = Member(Location(_locationLat, _locatinoLon), MemberStatus.PENDING);
+        s_members[msg.sender] = Member(
+            Location(_locationLat, _locatinoLon),
+            _meterId,
+            MemberStatus.PENDING
+        );
     }
 
     /* Setter Functions */
@@ -119,10 +127,10 @@ contract Community is Ownable {
     }
 
     function getTimelock() public view returns (address) {
-        return address(i_timelock);
+        return address(s_timelock);
     }
 
     function getGovernance() public view returns (address) {
-        return address(i_governance);
+        return address(s_governance);
     }
 }

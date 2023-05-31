@@ -1,102 +1,166 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
 import {
-    CommunityFactory,
-    Community,
-    CrowdlendingFactory,
+    Governance,
+    CommunityItems,
     TimeLock,
+    Community,
+    CommunityFactory,
 } from "../../typechain/contracts"
-import { deployments, ethers, network } from "hardhat"
-import { developmentChains } from "../../helper-hardhat-config"
-import { assert, expect } from "chai"
 import {
-    MIN_DELAY,
+    Community__factory,
+    TimeLock__factory,
+    CommunityItems__factory,
+    Governance__factory,
+} from "../../typechain/factories/contracts"
+import { deployments, ethers } from "hardhat"
+import { assert, expect } from "chai"
+import { moveBlocks } from "../../utils/move-blocks"
+import { moveTime } from "../../utils/move-time"
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers"
+import { NAME, EPICENTER_LAT, EPICENTER_LON } from "../../constants/community"
+import {
     QUORUM_PERCENTAGE,
+    MIN_DELAY,
     VOTING_DELAY,
     VOTING_PERIOD,
 } from "../../constants/governance"
-import { NAME, EPICENTER_LAT, EPICENTER_LON } from "../../constants/community"
+import { createCommunity } from "../../scripts/create-community"
 
-!developmentChains.includes(network.name)
-    ? describe.skip
-    : describe("Community Factory", async () => {
-          let crowdlendingFactory: CrowdlendingFactory
-          let communityFactory: CommunityFactory
-          let community: Community
-          let deployer: SignerWithAddress
-          let creator: SignerWithAddress
-          let accounts: SignerWithAddress[]
+describe("Community governance Flow", async () => {
+    let communityFactory: CommunityFactory
+    let community: Community
+    let timeLock: TimeLock
+    let communityItems: CommunityItems
+    let governance: Governance
+    let accounts: SignerWithAddress[]
+    let creator: SignerWithAddress
 
-          before(async () => {
-              accounts = await ethers.getSigners()
-              deployer = accounts[0]
-              creator = accounts[1]
-              await deployments.fixture(["crowdlendingFactory", "communityFactory"])
+    before(async () => {
+        accounts = await ethers.getSigners()
+        creator = accounts[0]
 
-              communityFactory = await ethers.getContract("CommunityFactory", deployer.address)
-          })
+        await deployments.fixture(["deploy"])
+        communityFactory = await ethers.getContract("CommunityFactory")
 
-          describe("constructor", function () {
-              it("initializes the communityFactory correctly", async () => {
-                  const allCommunities = await communityFactory.getAllCommunities()
-                  assert.equal(allCommunities.length, 0)
-              })
-          })
+        await communityFactory.connect(creator).createCommunity(NAME, EPICENTER_LAT, EPICENTER_LON)
 
-          describe("createCommunity", function () {
-              it("emits event on community creation", async () => {
-                  const transactionResponse = await communityFactory
-                      .connect(creator)
-                      .createCommunity(
-                          NAME,
-                          EPICENTER_LAT,
-                          EPICENTER_LON,
-                          "",
-                          "",
-                          "",
-                          MIN_DELAY,
-                          QUORUM_PERCENTAGE,
-                          VOTING_PERIOD,
-                          VOTING_DELAY
-                      )
+        const communityAddress = (await communityFactory.getAllCommunities())[0]
+        community = Community__factory.connect(communityAddress, ethers.provider)
 
-                  expect(transactionResponse).to.emit(communityFactory, "NewCommunity")
+        const communityItemsAddress = await community.getCommunityItems()
+        communityItems = CommunityItems__factory.connect(communityItemsAddress, ethers.provider)
+    })
 
-                  const transactionReceipt = await transactionResponse.wait()
+    describe("createGovernance", function () {
+        it("should create a governance contract", async () => {
+            const transactionResponse = await community
+                .connect(creator)
+                .createGovernance(MIN_DELAY, QUORUM_PERCENTAGE, VOTING_PERIOD, VOTING_DELAY)
 
-                  const eventsLength = transactionReceipt.events!.length
-                  const communityAddress =
-                      transactionReceipt.events![eventsLength - 1].args!.community
+            expect(transactionResponse).to.emit(communityFactory, "GovernanceCreation")
 
-                  const Community = await ethers.getContractFactory("Community")
-                  community = Community.attach(communityAddress) as Community
-              })
+            const transactionReceipt = await transactionResponse.wait()
 
-              it("initializes the community correctly", async () => {
-                  const epicenter = await community.getEpicenter()
-                  const name = await community.getName()
-                  assert.equal(epicenter[0].toString(), EPICENTER_LAT.toString())
-                  assert.equal(epicenter[1].toString(), EPICENTER_LON.toString())
-                  assert.equal(name, NAME)
-              })
+            const eventsLength = transactionReceipt.events!.length
 
-              it("community has a crowdlending factory", async () => {
-                  const crowdlendingFactoryAddress = await community.getCrowdlendingFactory()
-                  assert(ethers.utils.isAddress(crowdlendingFactoryAddress))
-              })
+            const governanceAddress = transactionReceipt.events![eventsLength - 1].args![0]
+            const timelockAddress = transactionReceipt.events![eventsLength - 1].args![1]
 
-              it("community has an items contract", async () => {
-                  const communityItemsAddress = await community.getCommunityItems()
-                  assert(ethers.utils.isAddress(communityItemsAddress))
-              })
+            governance = Governance__factory.connect(governanceAddress, ethers.provider)
+            timeLock = TimeLock__factory.connect(timelockAddress, ethers.provider)
+        })
 
-              it("community has a governance contract", async () => {
-                  const governanceAddress = await community.getGovernance()
-                  assert(ethers.utils.isAddress(governanceAddress))
-              })
+        it("community has a governance contract", async () => {
+            const governanceAddress = await community.getGovernance()
+            assert(ethers.utils.isAddress(governanceAddress))
+        })
 
-              it("community has a timelock contract", async () => {
-                  const timelockAddress = await community.getTimelock()
-                  assert(ethers.utils.isAddress(timelockAddress))
-              })
-          })
-      })
+        it("community has a timelock contract", async () => {
+            const timelockAddress = await community.getTimelock()
+            assert(ethers.utils.isAddress(timelockAddress))
+        })
+    })
+
+    describe("enterCommunity", function () {
+        it("does not allow non-owner to add a member to the community", async () => {
+            const nonOwner = accounts[1]
+            const locationX = 0
+            const locationY = 0
+            const meterIdentifier = "METER_IDENTIFIER"
+
+            await expect(
+                community.connect(nonOwner).enterCommunity(locationX, locationY, meterIdentifier)
+            ).to.be.revertedWith("Ownable: caller is not the owner")
+        })
+
+        it("proposes a member to enter the community, votes, waits, queues, and then executes", async () => {
+            const func = "enterCommunity"
+            const locationLat = 0
+            const locationLon = 0
+            const proposalDescription = "a new member"
+            const voteWay = 1
+            const reason = "I lika do da cha cha"
+            const proposer = accounts[0]
+            const meterIdentifier = "testMeterIdentifier"
+
+            // propose
+            const encodedFunctionCall = community.interface.encodeFunctionData(func, [
+                locationLat,
+                locationLon,
+                meterIdentifier,
+            ])
+            const proposeTx = await governance
+                .connect(proposer)
+                .propose([community.address], [0], [encodedFunctionCall], proposalDescription, {
+                    gasLimit: 200000,
+                })
+
+            const proposeReceipt = await proposeTx.wait(1)
+            const proposalId = proposeReceipt.events![0].args!.proposalId
+            let proposalState = await governance.state(proposalId)
+            assert.equal(proposalState.toString(), "0")
+
+            console.log(`Current Proposal State: ${proposalState}`)
+
+            await moveBlocks(VOTING_DELAY + 1)
+
+            // vote
+            const voteTx = await governance
+                .connect(proposer)
+                .castVoteWithReason(proposalId, voteWay, reason)
+            await voteTx.wait(1)
+            proposalState = await governance.state(proposalId)
+            console.log(`\n\Current Proposal State: ${proposalState}`)
+            assert.equal(proposalState.toString(), "1")
+
+            await moveBlocks(VOTING_PERIOD + 1)
+
+            // queue
+            proposalState = await governance.state(proposalId)
+            assert.equal(proposalState.toString(), "4")
+            console.log(`\n\Current Proposal State: ${proposalState}`)
+            const descriptionHash = ethers.utils.id(proposalDescription)
+            const queueTx = await governance
+                .connect(proposer)
+                .queue([community.address], [0], [encodedFunctionCall], descriptionHash, {
+                    gasLimit: 200000,
+                })
+            await queueTx.wait(1)
+            await moveTime(MIN_DELAY + 1)
+            await moveBlocks(1)
+
+            proposalState = await governance.state(proposalId)
+            assert.equal(proposalState.toString(), "5")
+            console.log(`Current Proposal State: ${proposalState}`)
+
+            // execute
+            console.log("Executing...")
+            console.log
+            const exTx = await governance
+                .connect(proposer)
+                .execute([community.address], [0], [encodedFunctionCall], descriptionHash)
+            await exTx.wait(1)
+        })
+    })
+
+    describe("createCampaign", function () {})
+})

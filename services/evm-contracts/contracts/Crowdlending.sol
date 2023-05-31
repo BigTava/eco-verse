@@ -36,10 +36,10 @@ contract Crowdlending is Ownable {
     }
 
     //----------------- State variables -------------------
-    uint public totalPledgedAmount;
-    IERC20 public immutable token;
-    Campaign public campaign;
-    CampaignState public state;
+    uint private s_totalPledgedAmount;
+    IERC20 private immutable i_token;
+    Campaign private s_campaign;
+    CampaignState private s_state;
 
     mapping(address => uint) public pledgedAmount;
 
@@ -55,8 +55,8 @@ contract Crowdlending is Ownable {
 
     //----------------- Functions -------------------------
     constructor(address _token) {
-        token = IERC20(_token);
-        state = CampaignState.OPEN;
+        i_token = IERC20(_token);
+        s_state = CampaignState.OPEN;
     }
 
     function launch(
@@ -66,11 +66,11 @@ contract Crowdlending is Ownable {
         uint256 _startAt,
         uint256 _endAt
     ) external onlyOwner {
-        if (_endAt < _startAt || state != CampaignState.OPEN) {
+        if (_endAt < _startAt || s_state != CampaignState.OPEN) {
             revert Crowdlending__InvalidDate();
         }
 
-        campaign = Campaign({
+        s_campaign = Campaign({
             creator: _creator,
             apy: _apy,
             goal: _goal,
@@ -81,35 +81,35 @@ contract Crowdlending is Ownable {
         });
 
         transferOwnership(_creator);
-        state = CampaignState.LAUNCHED;
+        s_state = CampaignState.LAUNCHED;
         emit Launch(msg.sender, _apy, _goal, _startAt, _endAt);
     }
 
     // Investors can pledge until start time reached / goal reached
     function pledge(uint _amount) external {
         if (
-            block.timestamp > campaign.startAt ||
-            token.balanceOf(msg.sender) < _amount ||
-            campaign.pledged + _amount > campaign.goal
+            block.timestamp > s_campaign.startAt ||
+            i_token.balanceOf(msg.sender) < _amount ||
+            s_campaign.pledged + _amount > s_campaign.goal
         ) {
             revert Crowdlending__ErrorPledging();
         }
 
-        token.transferFrom(msg.sender, address(this), _amount);
-        campaign.pledged += _amount;
+        i_token.transferFrom(msg.sender, address(this), _amount);
+        s_campaign.pledged += _amount;
         pledgedAmount[msg.sender] += _amount;
-        totalPledgedAmount += _amount;
+        s_totalPledgedAmount += _amount;
 
         emit Pledge(msg.sender, _amount);
     }
 
     // Creators repays pledged + APY
     function repay(uint _amount) external {
-        if (_amount < (campaign.pledged * campaign.apy) / 100 + campaign.pledged) {
+        if (_amount < (s_campaign.pledged * s_campaign.apy) / 100 + s_campaign.pledged) {
             // creators can not repay an amount smaller than the pledged + APY
             revert Crowdlending__ErrorRepaying();
         }
-        token.transferFrom(msg.sender, address(this), _amount);
+        i_token.transferFrom(msg.sender, address(this), _amount);
 
         emit Repay(msg.sender, _amount);
     }
@@ -117,17 +117,17 @@ contract Crowdlending is Ownable {
     // Creators can claim funds from startDate on
     function claimFunds() external onlyOwner {
         if (
-            block.timestamp < campaign.startAt || // creators can not claim funds before the campaign starts
-            campaign.pledged != campaign.goal || // creators can not claim funds if the goal is not reached
-            campaign.claimed
+            block.timestamp < s_campaign.startAt || // creators can not claim funds before the campaign starts
+            s_campaign.pledged != s_campaign.goal || // creators can not claim funds if the goal is not reached
+            s_campaign.claimed
         ) {
             // creators can not claim funds if they have already claimed
             revert Crowdlending__ErrorClaiming();
         }
-        campaign.claimed = true;
-        uint value = campaign.pledged;
-        campaign.pledged = 0;
-        token.transfer(msg.sender, value);
+        s_campaign.claimed = true;
+        uint value = s_campaign.pledged;
+        s_campaign.pledged = 0;
+        i_token.transfer(msg.sender, value);
 
         emit Claim(value);
     }
@@ -135,36 +135,36 @@ contract Crowdlending is Ownable {
     // Users can unpledge without APY from startDAte
     function unPledge(uint _amount) external {
         if (
-            (block.timestamp >= campaign.startAt && campaign.pledged == campaign.goal) || // users can not unpledge after the campaign starts and the goal is reached
+            (block.timestamp >= s_campaign.startAt && s_campaign.pledged == s_campaign.goal) || // users can not unpledge after the campaign starts and the goal is reached
             pledgedAmount[msg.sender] >= _amount
         ) {
             // users can not unpledge more than they already have pledged
             revert Crowdlending__ErrorUnpledging();
         }
 
-        token.transferFrom(address(this), msg.sender, _amount);
-        campaign.pledged -= _amount;
+        i_token.transferFrom(address(this), msg.sender, _amount);
+        s_campaign.pledged -= _amount;
         pledgedAmount[msg.sender] -= _amount;
-        totalPledgedAmount -= _amount;
+        s_totalPledgedAmount -= _amount;
 
         emit Unpledge(msg.sender, _amount);
     }
 
     //  Users can claim the pledged amount + APY
     function claimPledged() external {
-        if (block.timestamp <= campaign.endAt) {
+        if (block.timestamp <= s_campaign.endAt) {
             // users can not claim before the campaign ends
             revert Crowdlending__ErrorClaiming();
         }
 
         uint pa = pledgedAmount[msg.sender];
         pledgedAmount[msg.sender] = 0;
-        uint totalFunds = pa + (campaign.apy * pa) / 100;
+        uint totalFunds = pa + (s_campaign.apy * pa) / 100;
 
-        token.approve(address(this), totalFunds);
-        token.transferFrom(address(this), msg.sender, totalFunds);
+        i_token.approve(address(this), totalFunds);
+        i_token.transferFrom(address(this), msg.sender, totalFunds);
 
-        campaign.pledged -= pa;
+        s_campaign.pledged -= pa;
 
         emit Claim(pa);
     }
