@@ -94,22 +94,12 @@ const config: HardhatUserConfig = {
     solidity: {
         compilers: [
             {
-                version: "0.8.20",
-            },
-            {
                 version: "0.8.9",
             },
             {
                 version: "0.4.24",
             },
         ],
-        settings: {
-            optimizer: {
-                enabled: true,
-                runs: 1000,
-                viaIR: true,
-            },
-        },
     },
     mocha: {
         timeout: 200000, // 200 seconds max for running tests

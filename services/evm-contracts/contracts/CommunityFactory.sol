@@ -17,7 +17,7 @@ contract CommunityFactory {
     address[] private allCommunities;
 
     //----------------- Events ----------------------------
-    event NewCommunity(address indexed community, uint256 epicenterLon, uint256 epicenterLat);
+    event NewCommunity(address indexed community, int256 epicenterLon, int256 epicenterLat);
 
     //----------------- Modifiers -------------------------
 
@@ -53,25 +53,7 @@ contract CommunityFactory {
         address communityAddress = address(newCommunity);
         allCommunities.push(communityAddress);
 
-        addCommunityToDb(_name, _epicenterLon, _epicenterLat);
-
         emit NewCommunity(communityAddress, _epicenterLon, _epicenterLat);
-    }
-
-    function addCommunityToDb(string calldata _name, uint256 _lon, uint256 _lat) internal {
-        tableland.mutate(
-            address(this),
-            communityTableId,
-            string.concat(
-                "INSERT INTO ",
-                "Community",
-                "(",
-                "name, epicenterLon, epicenterLat",
-                ")VALUES(",
-                string.concat(_name, Strings.toString(_lon), Strings.toString(_lat)),
-                ")"
-            )
-        );
     }
 
     /* Getter Functions */

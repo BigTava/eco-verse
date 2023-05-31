@@ -24,8 +24,8 @@ contract Community is Ownable {
     }
 
     struct Location {
-        uint256 lat;
-        uint256 lon;
+        int256 lat;
+        int256 lon;
     }
 
     struct Member {
@@ -87,7 +87,7 @@ contract Community is Ownable {
         transferOwnership(address(i_timelock));
     }
 
-    function enterCommunity(uint256 _locationLat, uint256 _locatinoLon) public onlyOwner {
+    function enterCommunity(int256 _locationLat, int256 _locatinoLon) public onlyOwner {
         Member memory newMember = s_members[msg.sender];
 
         if (newMember.status != MemberStatus.INACTIVE) {
