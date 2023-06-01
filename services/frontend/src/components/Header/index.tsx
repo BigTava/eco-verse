@@ -51,7 +51,7 @@ export function Header() {
             <NavLinks
               labels={[
                 ["Discover", "#discover"],
-                ["Invest", "open-campaigns", "API > 10%"],
+                ["Invest", "campaigns", "API > 10%"],
               ]}
             />
           </div>

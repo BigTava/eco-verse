@@ -62,31 +62,6 @@ contract Community is Ownable {
         transferOwnership(_creator);
     }
 
-    function createGovernance(
-        uint256 _minDelay,
-        uint256 _quorumPercentage,
-        uint256 _votingPeriod,
-        uint256 _votingDelay
-    ) public onlyOwner {
-        address[] memory proposers;
-        address[] memory executors;
-        s_timelock = new TimelockController(_minDelay, proposers, executors, address(this));
-        s_governance = new Governance(
-            i_communityItems,
-            s_timelock,
-            _quorumPercentage,
-            _votingPeriod,
-            _votingDelay
-        );
-        s_timelock.grantRole(s_timelock.EXECUTOR_ROLE(), address(0));
-        s_timelock.grantRole(s_timelock.PROPOSER_ROLE(), address(s_governance));
-        s_timelock.revokeRole(s_timelock.TIMELOCK_ADMIN_ROLE(), address(this));
-
-        transferOwnership(address(s_timelock));
-
-        emit GovernanceCreation(address(s_governance), address(s_timelock));
-    }
-
     function enterCommunity(
         int256 _locationLat,
         int256 _locatinoLon,

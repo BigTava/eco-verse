@@ -62,6 +62,7 @@ const config: HardhatUserConfig = {
             accounts: PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : [],
             saveDeployments: true,
             chainId: 80001,
+            allowUnlimitedContractSize: true,
         },
         polygon: {
             url: POLYGON_MAINNET_RPC_URL,
@@ -105,7 +106,7 @@ const config: HardhatUserConfig = {
         settings: {
             optimizer: {
                 enabled: true,
-                runs: 5,
+                runs: 100,
             },
         },
     },

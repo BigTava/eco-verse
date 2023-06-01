@@ -4,8 +4,12 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
-import "./Crowdlending.sol";
+import "../Crowdlending.sol";
 
+/** @title Crowdlending Factory Contract
+ *  @author EcoVerse Team
+ *  @notice This factory contract allows creating and tracking crowdlending campaigns for energy communities
+ */
 contract CrowdlendingFactory is Ownable {
     //----------------- Type declarations -----------------
 
