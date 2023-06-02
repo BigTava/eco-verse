@@ -32,4 +32,4 @@ const deployCommunityItemsFactory: DeployFunction = async function (
     log("----------------------------------------------------")
 }
 export default deployCommunityItemsFactory
-deployCommunityItemsFactory.tags = ["all", "deploy", "communityItemsFactory"]
+deployCommunityItemsFactory.tags = ["all", "core", "deploy", "communityItemsFactory"]

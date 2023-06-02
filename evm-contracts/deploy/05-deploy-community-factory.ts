@@ -14,8 +14,7 @@ const deployCommunityFactory: DeployFunction = async function (hre: HardhatRunti
         : VERIFICATION_BLOCK_CONFIRMATIONS
 
     const communityItemsFactory = await ethers.getContract("CommunityItemsFactory")
-    const governanceFactory = await ethers.getContract("GovernanceFactory")
-    const args: any[] = [communityItemsFactory.address, governanceFactory.address]
+    const args: any[] = [communityItemsFactory.address]
 
     const communityFactory = await deploy("CommunityFactory", {
         from: deployer,
@@ -34,4 +33,4 @@ const deployCommunityFactory: DeployFunction = async function (hre: HardhatRunti
     log("----------------------------------------------------")
 }
 export default deployCommunityFactory
-deployCommunityFactory.tags = ["all", "deploy", "communityFactory"]
+deployCommunityFactory.tags = ["all", "core", "deploy", "communityFactory"]

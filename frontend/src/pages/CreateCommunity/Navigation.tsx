@@ -22,7 +22,6 @@ export default function Navigation(props: NavigationProps) {
   const steps = [
     { name: "1", href: "#", status: getStatus(1, props.activeStep) },
     { name: "2", href: "#", status: getStatus(2, props.activeStep) },
-    { name: "3", href: "#", status: getStatus(3, props.activeStep) },
   ];
   return (
     <nav aria-label="Progress">

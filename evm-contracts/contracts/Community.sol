@@ -4,11 +4,12 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
-import "./libs/MemberLib.sol";
-
-import "./Governance.sol";
 import "./CommunityItems.sol";
+
 import "./interfaces/ICrowdlendingFactory.sol";
+import "./interfaces/IGovernance.sol";
+import "./interfaces/ITimeLock.sol";
+import "./interfaces/ICommunityItems.sol";
 
 /* Errors */
 error Community__MemberIsInCommunity();
@@ -18,19 +19,42 @@ error Community__MemberIsInCommunity();
  *  @notice This contract is for creating a decentalized energy community
  */
 contract Community is Ownable {
-    using MemberLib for MemberLib.Member;
-
     //----------------- Type declarations -----------------
+    enum MemberType {
+        CONSUMER,
+        PROSUMER,
+        INVESTOR,
+        EXTERNAL
+    }
+
+    enum MemberStatus {
+        INACTIVE, // not participating in the community currently
+        PENDING, // has applied for membership but it's not approved yet
+        ACTIVE, // is in good standing
+        SUSPENDED // has been temporarily suspended
+    }
+
+    struct Location {
+        int256 lat;
+        int256 lon;
+    }
+
+    struct Member {
+        Location location;
+        string _memberIdentifier;
+        MemberType memberType;
+        MemberStatus status;
+    }
 
     //----------------- State variables -------------------
     string private i_name;
-    MemberLib.Location private i_epicenter;
-    CommunityItems private i_communityItems;
-    TimelockController private s_timelock;
-    Governance private s_governance;
+    Location private i_epicenter;
+    ICommunityItems private i_communityItems;
+    ITimeLock private s_timeLock;
+    IGovernance private s_governance;
     ICrowdlendingFactory private s_crowdlendingFactory;
 
-    mapping(address => MemberLib.Member) private s_members; // member -> details
+    mapping(address => Member) private s_members; // member -> details
 
     //----------------- Events ----------------------------
     event MemberEnter(address indexed member);
@@ -41,30 +65,49 @@ contract Community is Ownable {
     //----------------- Functions -------------------------
     constructor(string memory _name, int256 _epicenterLat, int256 _epicenterLon, address _creator) {
         i_name = _name;
-        i_epicenter = MemberLib.Location(_epicenterLat, _epicenterLon);
+        i_epicenter = Location(_epicenterLat, _epicenterLon);
 
         // CommunityItems
-        i_communityItems = new CommunityItems("", "", "");
+        CommunityItems communityItems = new CommunityItems("", "", "");
+        i_communityItems = ICommunityItems(address(communityItems));
+
         i_communityItems.mintCreatorMembership(_creator);
 
         transferOwnership(_creator);
     }
 
     function enterCommunity(
+        address _member,
         int256 _locationLat,
         int256 _locatinoLon,
-        string memory _meterId
+        string memory _meterId,
+        MemberType _memberType
     ) public onlyOwner {
-        MemberLib.Member memory newMember = s_members[msg.sender];
+        Member memory newMember = s_members[_member];
 
-        if (newMember.status != MemberLib.MemberStatus.INACTIVE) {
+        if (newMember.status != MemberStatus.INACTIVE) {
             revert Community__MemberIsInCommunity();
         }
-        s_members[msg.sender] = MemberLib.Member(
-            MemberLib.Location(_locationLat, _locatinoLon),
+        s_members[_member] = Member(
+            Location(_locationLat, _locatinoLon),
             _meterId,
-            MemberLib.MemberStatus.PENDING
+            _memberType,
+            MemberStatus.ACTIVE
         );
+
+        _mintMembership(_member, _memberType);
+    }
+
+    function _mintMembership(address _member, MemberType _memberType) internal {
+        if (_memberType == MemberType.CONSUMER) {
+            i_communityItems.mintConsumerMembership(_member);
+        } else if (_memberType == MemberType.PROSUMER) {
+            i_communityItems.mintProsumerMembership(_member);
+        } else if (_memberType == MemberType.INVESTOR) {
+            i_communityItems.mintInvestorMembership(_member);
+        } else if (_memberType == MemberType.EXTERNAL) {
+            i_communityItems.mintExternalMembership(_member);
+        }
     }
 
     /* Setter Functions */
@@ -73,11 +116,11 @@ contract Community is Ownable {
     }
 
     function setGovernance(address _governance) public onlyOwner {
-        s_crowdlendingFactory = ICrowdlendingFactory(_crowdlendingFactory);
+        s_governance = IGovernance(_governance);
     }
 
-    function setCrowdlendingFactory(address _crowdlendingFactory) public onlyOwner {
-        s_crowdlendingFactory = ICrowdlendingFactory(_crowdlendingFactory);
+    function setTimeLock(address _timeLock) public onlyOwner {
+        s_timeLock = ITimeLock(_timeLock);
     }
 
     /* Getter Functions */
@@ -98,7 +141,7 @@ contract Community is Ownable {
     }
 
     function getTimelock() public view returns (address) {
-        return address(s_timelock);
+        return address(s_timeLock);
     }
 
     function getGovernance() public view returns (address) {

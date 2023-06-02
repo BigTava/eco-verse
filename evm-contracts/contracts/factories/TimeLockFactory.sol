@@ -6,8 +6,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/governance/utils/IVotes.sol";
 import "hardhat/console.sol";
 
-import "../Governance.sol";
-import "../TimeLock.sol";
+import "../governance/Governance.sol";
+import "../governance/TimeLock.sol";
 import "../Community.sol";
 
 /** @title Energy Community TimeLock Factory Contract

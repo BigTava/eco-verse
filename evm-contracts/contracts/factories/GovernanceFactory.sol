@@ -5,8 +5,8 @@ import "hardhat/console.sol";
 
 import "../interfaces/ITimeLockFactory.sol";
 
-import "../Governance.sol";
-import "../TimeLock.sol";
+import "../governance/Governance.sol";
+import "../governance/TimeLock.sol";
 import "../interfaces/ICommunity.sol";
 
 /** @title Energy Community Governance Factory Contract

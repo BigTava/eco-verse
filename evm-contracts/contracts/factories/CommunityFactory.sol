@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
 import "./CommunityItemsFactory.sol";
-import "./GovernanceFactory.sol";
 
 import "../Community.sol";
 
@@ -18,7 +17,6 @@ contract CommunityFactory {
 
     //----------------- State variables -------------------
     CommunityItemsFactory private s_communityItemsFactory;
-    GovernanceFactory private s_governanceFactory;
 
     address[] private s_allCommunities;
 
@@ -26,8 +24,6 @@ contract CommunityFactory {
     event NewCommunity(
         address indexed community,
         address communityItems,
-        address governance,
-        address timelock,
         int256 epicenterLon,
         int256 epicenterLat
     );
@@ -35,44 +31,22 @@ contract CommunityFactory {
     //----------------- Modifiers -------------------------
 
     //----------------- Functions -------------------------
-    constructor(address _communityItemsFactory, address _governanceFactory) {
+    constructor(address _communityItemsFactory) {
         s_communityItemsFactory = CommunityItemsFactory(_communityItemsFactory);
-        s_governanceFactory = GovernanceFactory(_governanceFactory);
     }
 
     function createCommunity(
         string memory _name,
         int256 _epicenterLon,
-        int256 _epicenterLat,
-        uint256 _minDelay,
-        uint256 _quorumPercentage,
-        uint256 _votingPeriod,
-        uint256 _votingDelay
+        int256 _epicenterLat
     ) public {
         Community newCommunity = new Community(_name, _epicenterLon, _epicenterLat, msg.sender);
         address communityAddress = address(newCommunity);
 
         address communityItemsAddress = s_communityItemsFactory.createCommunityItems();
 
-        (address governanceAddress, address timelockAddress) = s_governanceFactory.createGovernance(
-            communityAddress,
-            communityItemsAddress,
-            _minDelay,
-            _quorumPercentage,
-            _votingPeriod,
-            _votingDelay
-        );
-
         s_allCommunities.push(communityAddress);
-
-        emit NewCommunity(
-            communityAddress,
-            communityItemsAddress,
-            governanceAddress,
-            timelockAddress,
-            _epicenterLon,
-            _epicenterLat
-        );
+        emit NewCommunity(communityAddress, communityItemsAddress, _epicenterLon, _epicenterLat);
     }
 
     /* Getter Functions */
