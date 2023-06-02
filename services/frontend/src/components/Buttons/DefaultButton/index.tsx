@@ -5,7 +5,7 @@ import { baseStyles, variantStyles } from "./styles";
 
 type DefaultButtonProps = {
   variant?: "solid" | "outline";
-  color?: "cyan" | "white" | "gray";
+  color?: "cyan" | "white" | "gray" | "green";
   className?: string;
   href?: string;
   type?: "button" | "submit" | "reset";
@@ -17,7 +17,7 @@ type DefaultButtonProps = {
 export const DefaultButton = forwardRef(function Button(
   {
     variant = "solid",
-    color = "gray",
+    color = "green",
     className,
     href,
     onClick,
