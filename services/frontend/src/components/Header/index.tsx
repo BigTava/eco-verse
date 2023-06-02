@@ -7,7 +7,8 @@ import { useUser } from "contexts/User.context";
 
 // Components
 import Container from "components/Container";
-import Logo from "components/Logo";
+// import Logo from "components/Logo";
+import logo from "assets/logos/ecoverse.png";
 import NavLinks from "components/Header/NavLinks";
 import AccountModal from "components/Modals/AccountModal";
 import MobileNavLink from "./MobileNavLink";
@@ -46,7 +47,8 @@ export function Header() {
         <Container className="relative z-50 flex justify-between py-8">
           <div className="relative z-10 flex items-center gap-16">
             <a href="/" aria-label="Home">
-              <Logo className="h-10 w-auto" />
+              {/* <Logo className="h-10 w-auto" /> */}
+              <img src={logo} alt="logo" width="150px"></img>
             </a>
             <NavLinks
               labels={[
