@@ -54,6 +54,7 @@ export function Header() {
               labels={[
                 ["Discover", "#discover"],
                 ["Invest", "campaigns", "API > 10%"],
+                ["Roadmap", "roadmap"],
               ]}
             />
           </div>

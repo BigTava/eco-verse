@@ -10,8 +10,8 @@ import Container from "components/Container";
 
 // Assets
 
-import logoChainlink from "assets/logos/Chainlink_Logo_Blue.svg";
-import logoEthereum from "assets/logos/ethereum-eth-logo-full-horizontal.svg";
+import logoChainlink from "assets/logos/chainlinkLogo.svg";
+import logoEthereum from "assets/logos/ethereumLogo.svg";
 
 export function Hero() {
   const navigate = useNavigate();

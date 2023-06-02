@@ -5,6 +5,7 @@ import Landing from "../pages/Landing";
 // Components
 import CreateCommunity from "pages/CreateCommunity";
 import ListCampaigns from "pages/ListCampaigns";
+import Roadmap from "pages/Roadmap/Roadmap";
 
 const Router = () => {
   return (
@@ -13,6 +14,7 @@ const Router = () => {
         <Route index element={<Landing />} />
         <Route path="create-community" element={<CreateCommunity />} />
         <Route path="campaigns" element={<ListCampaigns />} />
+        <Route path="roadmap" element={<Roadmap />} />
       </Route>
     </Routes>
   );
