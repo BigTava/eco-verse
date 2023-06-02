@@ -8,7 +8,7 @@ import { useUser } from "contexts/User.context";
 // Components
 import Container from "components/Container";
 // import Logo from "components/Logo";
-import logo from "assets/logos/ecoverse.png";
+import logo from "assets/images/EcoVerse-logo.png";
 import NavLinks from "components/Header/NavLinks";
 import AccountModal from "components/Modals/AccountModal";
 import MobileNavLink from "./MobileNavLink";
@@ -48,7 +48,12 @@ export function Header() {
           <div className="relative z-10 flex items-center gap-16">
             <a href="/" aria-label="Home">
               {/* <Logo className="h-10 w-auto" /> */}
-              <img src={logo} alt="logo" width="150px"></img>
+              <img
+                className="animate-bounce"
+                src={logo}
+                alt="logo"
+                width="160px"
+              ></img>
             </a>
             <NavLinks
               labels={[

@@ -30,7 +30,7 @@ function BackgroundIllustration(props) {
             y2="1025"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#06b6d4" />
+            <stop stopColor="#49DE80" />
             <stop offset="1" stopColor="#06b6d4" stopOpacity="0" />
           </linearGradient>
         </defs>
@@ -60,7 +60,7 @@ function BackgroundIllustration(props) {
             y2="913"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stopColor="#06b6d4" />
+            <stop stopColor="#49DE80" />
             <stop offset="1" stopColor="#06b6d4" stopOpacity="0" />
           </linearGradient>
         </defs>
