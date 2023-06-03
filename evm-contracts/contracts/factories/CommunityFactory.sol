@@ -53,4 +53,8 @@ contract CommunityFactory {
     function getAllCommunities() public view returns (address[] memory) {
         return s_allCommunities;
     }
+
+    fallback() external payable {}
+
+    receive() external payable {}
 }

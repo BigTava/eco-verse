@@ -74,4 +74,4 @@ const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment)
 }
 
 export default updateUI
-updateUI.tags = ["all", "frontend"]
+updateUI.tags = ["all", "core", "frontend"]

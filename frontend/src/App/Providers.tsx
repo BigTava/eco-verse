@@ -9,23 +9,30 @@ import { UserProvider } from "contexts/User.context";
 
 // Wagmi
 import { WagmiConfig, createClient, configureChains } from "wagmi";
-import { sepolia, polygonMumbai } from "@wagmi/core/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
+import { sepolia, hardhat } from "@wagmi/core/chains";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 
 type ProvidersProps = {
   children: React.ReactNode;
 };
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [sepolia, polygonMumbai],
+  [sepolia, hardhat],
   [
-    alchemyProvider({ apiKey: process.env.REACT_APP_SEPOLIA_API_KEY || "" }),
-    publicProvider(),
+    jsonRpcProvider({
+      rpc: () => ({
+        http: `${process.env.REACT_APP_SEPOLIA_RPC_URL}`,
+      }),
+    }),
+    jsonRpcProvider({
+      rpc: () => ({
+        http: `${process.env.REACT_APP_LOCALHOST_RPC_URL}`,
+      }),
+    }),
   ]
 );
 

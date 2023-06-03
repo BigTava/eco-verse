@@ -7,7 +7,6 @@ import { useUser } from "contexts/User.context";
 
 // Components
 import Container from "components/Container";
-// import Logo from "components/Logo";
 import logo from "assets/logos/ecoverse.png";
 import NavLinks from "components/Header/NavLinks";
 import AccountModal from "components/Modals/AccountModal";

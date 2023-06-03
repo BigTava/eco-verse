@@ -1,5 +1,8 @@
 // Core
 import { useState } from "react";
+import { useUser } from "contexts/User.context";
+import { toast } from "react-toastify";
+import { useWeb3 } from "contexts/Web3.context";
 
 // Components
 import { AuthLayout } from "components/Layouts/AuthLayout";
@@ -7,40 +10,34 @@ import { DefaultButton } from "components/Buttons/DefaultButton";
 
 // Form
 import GeneralInfo, { GeneralInfoValuesType } from "./GeneralInfo";
-import Governance, { GovernanceValuesType } from "./Governance";
-
+/*eslint-disable*/
 // Wagmi
 import {
   useContractWrite,
   usePrepareContractWrite,
   useWaitForTransaction,
+  useConnect,
+  useAccount,
+  useEnsName,
 } from "wagmi";
 
 // Utils
 import { communityFactoryAbi, contractAddresses } from "utils/constants";
-import { Networks } from "utils/networks";
+import { isSupportedChain } from "utils/networks";
 
 // Others
 import Navigation from "./Navigation";
 
-/*eslint-disable*/
-
 export default function CreateCommunity() {
-  const network = localStorage.getItem("network") || Networks.Sepolia;
-  console.log(network);
+  const { user } = useUser();
+  const { web3 } = useWeb3();
+
   const [activeStep, setActiveStep] = useState(1);
   const [generalInfoValues, setGeneralInfoValues] =
     useState<GeneralInfoValuesType>({
       name: null,
       latitude: null,
       longitude: null,
-    });
-  const [governanceValues, setGovernanceValues] =
-    useState<GovernanceValuesType>({
-      votingDelay: null,
-      votingPeriod: null,
-      quorumPercentage: null,
-      minDelay: null,
     });
 
   const {
@@ -51,13 +48,7 @@ export default function CreateCommunity() {
     address: contractAddresses["31337"]["communityFactory"] as `0x${string}`,
     abi: communityFactoryAbi,
     functionName: "createCommunity",
-    args: [
-      ...Object.values(generalInfoValues),
-      "",
-      "",
-      "",
-      ...Object.values(governanceValues),
-    ],
+    args: Object.values(generalInfoValues),
   });
 
   const { data, write, error, isError } = useContractWrite(config);
@@ -71,43 +62,52 @@ export default function CreateCommunity() {
       return Object.values(generalInfoValues).every(
         (val) => val !== null && val !== ""
       );
-    } else if (activeStep === 2) {
-      return Object.values(governanceValues).every(
-        (val) => val !== null && val !== ""
-      );
     }
   };
 
   const handleNext = async () => {
-    if (activeStep === 2) {
-      const args = { ...generalInfoValues, ...governanceValues };
+    if (!user) {
+      return toast.warn("Please Login!", {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "light",
+      });
+    }
+
+    if (!isSupportedChain(await web3.eth.getChainId())) {
+      return toast.warn("Please connect to a correct network!", {
+        position: "top-right",
+        autoClose: 5000,
+        theme: "light",
+      });
+    }
+
+    if (activeStep === 1) {
+      const args = { ...generalInfoValues };
       try {
         write?.();
-        return;
+
+        if (isSuccess) {
+          return setActiveStep(activeStep + 1);
+        }
       } catch (error) {
         console.log(error);
       }
     }
-
-    setActiveStep(activeStep + 1);
   };
 
   const getStep = (step: Number) => {
-    let props;
     switch (step) {
       case 1:
-        props = {
+        const props = {
           values: generalInfoValues,
           onChange: setGeneralInfoValues,
         };
 
-        return { form: <GeneralInfo {...props} />, buttonText: "Next" };
-      case 2:
-        props = {
-          values: governanceValues,
-          onChange: setGovernanceValues,
+        return {
+          form: <GeneralInfo {...props} />,
+          buttonText: "Let's go!",
         };
-        return { form: <Governance {...props} />, buttonText: "Almost there!" };
       default:
         return { form: <></>, buttonText: "Next" };
     }
@@ -118,18 +118,15 @@ export default function CreateCommunity() {
         <Navigation activeStep={activeStep} setActiveStep={setActiveStep} />
       </div>
 
-      <form>
-        {getStep(activeStep).form}
-        <DefaultButton
-          onClick={handleNext}
-          type="submit"
-          color="cyan"
-          className="mt-8 w-full"
-          disabled={!canSave()}
-        >
-          {getStep(activeStep).buttonText}
-        </DefaultButton>
-      </form>
+      {getStep(activeStep).form}
+      <DefaultButton
+        onClick={handleNext}
+        color="cyan"
+        className="mt-8 w-full"
+        disabled={!canSave()}
+      >
+        {getStep(activeStep).buttonText}
+      </DefaultButton>
     </AuthLayout>
   );
 }
