@@ -4,7 +4,7 @@ import { magic } from "plugins/magic";
 import { getWeb3 } from "plugins/web3";
 import { useWeb3 } from "contexts/Web3.context";
 import { useUser } from "contexts/User.context";
-
+import { useMoralis } from "react-moralis";
 // Components
 import Container from "components/Container";
 // import Logo from "components/Logo";
@@ -18,6 +18,7 @@ import { MenuIcon, ChevronUpIcon } from "components/Icons";
 import { Popover } from "@headlessui/react";
 
 export function Header() {
+  const { Moralis } = useMoralis();
   const { setUser, user } = useUser();
   const { setWeb3 } = useWeb3();
 
@@ -35,6 +36,7 @@ export function Header() {
       const web3 = await getWeb3();
       setWeb3(web3);
       setUser(accounts[0]);
+      Moralis.enableWeb3();
     } catch (error) {
       setDisabled(false);
     }

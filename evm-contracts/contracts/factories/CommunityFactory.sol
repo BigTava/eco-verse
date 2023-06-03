@@ -18,7 +18,7 @@ contract CommunityFactory {
     //----------------- State variables -------------------
     CommunityItemsFactory private s_communityItemsFactory;
 
-    address[] private s_allCommunities;
+    mapping(address => address) private s_communities; // participant address -> community address
 
     //----------------- Events ----------------------------
     event NewCommunity(
@@ -45,13 +45,13 @@ contract CommunityFactory {
 
         address communityItemsAddress = s_communityItemsFactory.createCommunityItems();
 
-        s_allCommunities.push(communityAddress);
+        s_communities[msg.sender] = communityAddress;
         emit NewCommunity(communityAddress, communityItemsAddress, _epicenterLon, _epicenterLat);
     }
 
     /* Getter Functions */
-    function getAllCommunities() public view returns (address[] memory) {
-        return s_allCommunities;
+    function getMyCommunity() public view returns (address) {
+        return s_communities[msg.sender];
     }
 
     fallback() external payable {}

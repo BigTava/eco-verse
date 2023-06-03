@@ -33,7 +33,10 @@ export default function Navigation(props: NavigationProps) {
               stepIdx !== steps.length - 1 ? "pr-8 sm:pr-20" : "",
               "relative"
             )}
-            onClick={() => props.setActiveStep(parseInt(step.name))}
+            onClick={() =>
+              props.activeStep > parseInt(step.name) &&
+              props.setActiveStep(parseInt(step.name))
+            }
           >
             {step.status === "complete" ? (
               <>

@@ -5,14 +5,13 @@ import { toast } from "react-toastify";
 import { useWeb3 } from "contexts/Web3.context";
 import { useWeb3Contract, useMoralis } from "react-moralis";
 import { ContractTransaction } from "ethers";
-
+/*eslint-disable*/
 // Components
 import { AuthLayout } from "components/Layouts/AuthLayout";
 import { DefaultButton } from "components/Buttons/DefaultButton";
 
 // Form
 import GeneralInfo, { GeneralInfoValuesType } from "./GeneralInfo";
-/*eslint-disable*/
 
 // Utils
 import { communityFactoryAbi, contractAddresses } from "utils/constants";
@@ -22,6 +21,8 @@ import { isSupportedChain } from "utils/networks";
 import Navigation from "./Navigation";
 
 export default function CreateCommunity() {
+  const { Moralis } = useMoralis();
+
   const { user } = useUser();
   const { web3 } = useWeb3();
   const { chainId } = useMoralis();
@@ -45,7 +46,11 @@ export default function CreateCommunity() {
       "communityFactory"
     ] as `0x${string}`, // specify the networkId
     functionName: "createCommunity",
-    params: { ...Object.values(generalInfoValues) },
+    params: {
+      _name: generalInfoValues.name,
+      _epicenterLon: generalInfoValues.longitude,
+      _epicenterLat: generalInfoValues.latitude,
+    },
   });
 
   const canSave = () => {
@@ -95,6 +100,7 @@ export default function CreateCommunity() {
       isLoading: false,
       autoClose: 1000,
     });
+    setActiveStep(2);
   };
 
   const handleError = (toastId: ReactText, error: any) => {
@@ -123,7 +129,11 @@ export default function CreateCommunity() {
 
       case 2:
         return {
-          form: <span>{generalInfoValues.name} was successfully created!</span>,
+          form: (
+            <div text-center w-100>
+              {generalInfoValues.name} was successfully created!
+            </div>
+          ),
           buttonText: "Let's go!",
         };
       default:
