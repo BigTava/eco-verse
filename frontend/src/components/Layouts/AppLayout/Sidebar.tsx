@@ -13,7 +13,6 @@ export default function Sidebar() {
   const location = useLocation();
 
   const { pathname } = location;
-  console.log(pathname);
 
   return (
     <div className="lg:fixed lg:top-28 lg:bottom-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
@@ -30,7 +29,7 @@ export default function Sidebar() {
                         item.route === pathname
                           ? "bg-gray-50 text-indigo-600"
                           : "text-gray-700 hover:bg-gray-50 hover:text-indigo-600",
-                        "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6  hover:cursor-pointer"
+                        "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 hover:cursor-pointer"
                       )}
                     >
                       <item.icon
