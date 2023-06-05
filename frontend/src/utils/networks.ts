@@ -13,6 +13,7 @@ export enum SupportedChainId {
 
 export const CHAIN_IDS_TO_NETWORKS = {
   [SupportedChainId.SEPOLIA]: Networks.Sepolia,
+  [SupportedChainId.HARDHAT]: Networks.Hardhat,
 };
 
 export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(

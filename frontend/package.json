@@ -22,6 +22,7 @@
     "magic-sdk": "^17.3.0",
     "moment": "^2.29.4",
     "moralis-v1": "^1.13.0",
+    "mui-datatables": "^4.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.40.0",
@@ -62,6 +63,7 @@
     ]
   },
   "devDependencies": {
+    "@tailwindcss/forms": "^0.5.3",
     "@typescript-eslint/eslint-plugin": "^5.35.1",
     "@typescript-eslint/parser": "^5.35.1",
     "autoprefixer": "^10.4.13",

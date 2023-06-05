@@ -5,9 +5,15 @@ import { useWeb3 } from "contexts/Web3.context";
 
 export const UserContext = React.createContext<any>([]);
 
+type ParticipantType = {
+  type: "CREATOR" | "MEMBER" | "INVESTOR" | "EXTERNAL";
+};
+
 export const UserProvider = ({ children }: any) => {
   const { setWeb3 } = useWeb3();
   const [user, setUser] = useState<any>(localStorage.getItem("user"));
+  const [communityAddress, setCommunityAddress] = useState<string | null>(null);
+  const [participant, setParticipant] = useState<ParticipantType | null>(null);
 
   const handleUserOnPageLoad = async () => {
     const provider = await getProvider();
@@ -37,7 +43,17 @@ export const UserProvider = ({ children }: any) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ ...value }}>{children}</UserContext.Provider>
+    <UserContext.Provider
+      value={{
+        ...value,
+        communityAddress,
+        setCommunityAddress,
+        participant,
+        setParticipant,
+      }}
+    >
+      {children}
+    </UserContext.Provider>
   );
 };
 

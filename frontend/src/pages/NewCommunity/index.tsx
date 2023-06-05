@@ -3,9 +3,10 @@ import { useState, ReactText } from "react";
 import { useUser } from "contexts/User.context";
 import { toast } from "react-toastify";
 import { useWeb3 } from "contexts/Web3.context";
-import { useWeb3Contract, useMoralis } from "react-moralis";
+import { useWeb3Contract } from "react-moralis";
 import { ContractTransaction } from "ethers";
-/*eslint-disable*/
+import { useNavigate } from "react-router-dom";
+
 // Components
 import { AuthLayout } from "components/Layouts/AuthLayout";
 import { DefaultButton } from "components/Buttons/DefaultButton";
@@ -21,11 +22,10 @@ import { isSupportedChain } from "utils/networks";
 import Navigation from "./Navigation";
 
 export default function CreateCommunity() {
-  const { Moralis } = useMoralis();
+  const navigate = useNavigate();
 
   const { user } = useUser();
   const { web3 } = useWeb3();
-  const { chainId } = useMoralis();
 
   const [activeStep, setActiveStep] = useState(1);
   const [generalInfoValues, setGeneralInfoValues] =
@@ -36,15 +36,11 @@ export default function CreateCommunity() {
     });
 
   /* Contract Calls */
-  const {
-    runContractFunction: createCommunity,
-    isLoading,
-    isFetching,
-  } = useWeb3Contract({
+  const { runContractFunction: createCommunity } = useWeb3Contract({
     abi: communityFactoryAbi,
     contractAddress: contractAddresses["31337"][
       "communityFactory"
-    ] as `0x${string}`, // specify the networkId
+    ] as `0x${string}`,
     functionName: "createCommunity",
     params: {
       _name: generalInfoValues.name,
@@ -89,6 +85,10 @@ export default function CreateCommunity() {
         onError: (error) => handleError(id, error),
       });
     }
+    console.log(activeStep);
+    if (activeStep === 2) {
+      navigate("/dashboard");
+    }
   };
 
   const handleSuccess = async (toastId: ReactText, tx: ContractTransaction) => {
@@ -104,7 +104,8 @@ export default function CreateCommunity() {
   };
 
   const handleError = (toastId: ReactText, error: any) => {
-    console.log(error);
+    /* eslint-disable no-console */
+    console.error(error);
     toast.update(toastId, {
       render: "Error creating community!",
       type: toast.TYPE.ERROR,
@@ -115,9 +116,10 @@ export default function CreateCommunity() {
   };
 
   const getStep = (step: Number) => {
+    let props;
     switch (step) {
       case 1:
-        const props = {
+        props = {
           values: generalInfoValues,
           onChange: setGeneralInfoValues,
         };
@@ -130,7 +132,7 @@ export default function CreateCommunity() {
       case 2:
         return {
           form: (
-            <div text-center w-100>
+            <div className="w-100 text-center">
               {generalInfoValues.name} was successfully created!
             </div>
           ),
