@@ -32,11 +32,12 @@ const Prefecth = () => {
       if (!isZeroAddress(address!)) {
         setCommunity(address);
       }
-      return result?.toString();
+
+      return address;
     },
   });
 
-  return community && !isZeroAddress(community?.data!) ? (
+  return community && !isZeroAddress(community.data!) ? (
     <AppLayout>
       <Outlet />
     </AppLayout>

@@ -56,8 +56,8 @@ contract Community is Ownable {
 
     mapping(address => Member) private s_members; // member -> details
 
-    //----------------- Temp variables (for indexor) ------
-    address[] public s_members_array; // array of members
+    //----------------- Temp variables (for indexer) ------
+    address[] private s_members_array; // array of members
 
     //----------------- Events ----------------------------
     event MemberEnter(address indexed member);
@@ -150,6 +150,15 @@ contract Community is Ownable {
 
     function getGovernance() public view returns (address) {
         return address(s_governance);
+    }
+
+    function getMember(address _member) public view returns (Member memory) {
+        return s_members[_member];
+    }
+
+    /* Temp Getter Functions (for indexer) */
+    function getMembers() public view returns (address[] memory) {
+        return s_members_array;
     }
 
     fallback() external payable {}

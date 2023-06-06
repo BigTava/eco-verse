@@ -1,5 +1,5 @@
 // Core
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Components
 import MuiTable from "components/Tables/MuiTable";
@@ -30,14 +30,28 @@ const defaultColumns = [
 ];
 
 type MembersTableProps = {
-  data: String[];
+  data: string[];
+};
+
+type Rows = {
+  address: string;
+  role: string;
+  status: string;
 };
 
 export default function MembersTable({ data }: MembersTableProps) {
   // Rows
-  const [rows] = useState([]);
+  const [rows, setRows] = useState<Rows[]>([]);
 
-  console.log(data);
+  useEffect(() => {
+    setRows(
+      data?.map((address: any) => ({
+        address: address,
+        role: "CONSUMER",
+        status: "ACTIVE",
+      }))
+    );
+  }, [data]);
 
   return (
     <MuiTable

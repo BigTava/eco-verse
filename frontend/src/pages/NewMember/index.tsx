@@ -39,13 +39,6 @@ export default function NewMember() {
   });
 
   /* Contract Calls */
-  console.log({
-    _member: generalInfoValues.publicAddress,
-    _locationLat: roleInfoValues.latitude,
-    _locatinoLon: roleInfoValues.longitude,
-    _meterId: roleInfoValues.meterIdentifier,
-    _memberType: generalInfoValues.type,
-  });
   const { runContractFunction: newMember } = useWeb3Contract({
     abi: communityAbi,
     contractAddress: community,

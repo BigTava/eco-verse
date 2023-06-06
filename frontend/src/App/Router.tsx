@@ -13,6 +13,7 @@ import Roadmap from "pages/Roadmap/Roadmap";
 import Dashboard from "pages/Dashboard";
 import ListMembers from "pages/ListMembers";
 import NewMember from "pages/NewMember";
+import ListProposals from "pages/ListProposals";
 
 const Router = () => {
   return (
@@ -27,6 +28,8 @@ const Router = () => {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="members" element={<ListMembers />} />
             <Route path="new-member" element={<NewMember />} />
+            <Route path="crowdloans" element={<ListCampaigns />} />
+            <Route path="governance" element={<ListProposals />} />
           </Route>
         </Route>
       </Route>

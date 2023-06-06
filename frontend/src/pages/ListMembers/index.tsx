@@ -1,16 +1,34 @@
 // Core
 import { useUser } from "contexts/User.context";
 import { useNavigate } from "react-router-dom";
+import { useWeb3Contract } from "react-moralis";
+import { useQuery } from "@tanstack/react-query";
 
 // Components
 import MembersTable from "./Table";
+
+// Utils
+import { communityAbi } from "utils/constants";
 
 export default function ListMembers() {
   const navigate = useNavigate();
 
   const { community } = useUser();
 
-  console.log(community);
+  const { runContractFunction: getMembers } = useWeb3Contract({
+    abi: communityAbi,
+    contractAddress: community,
+    functionName: "getMembers",
+    params: {},
+  });
+
+  const { data }: any = useQuery({
+    queryKey: ["Members"],
+    queryFn: async function () {
+      const members = await getMembers();
+      return members;
+    },
+  });
 
   return (
     <main className="lg:pl-72">
@@ -36,7 +54,7 @@ export default function ListMembers() {
       <div className="mt-8 flow-root">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-            <MembersTable data={[]} />
+            <MembersTable data={data} />
           </div>
         </div>
       </div>
