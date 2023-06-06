@@ -8,11 +8,11 @@ import NewMember from "pages/NewMember";
 import MembersTable from "./Table";
 
 export default function ListMembers() {
-  const { communityAddress } = useUser();
+  const { community } = useUser();
 
   const [showNewMemberModal, setShowNewMemberModal] = useState(false);
 
-  console.log(communityAddress);
+  console.log(community);
 
   return (
     <main className="lg:pl-72">

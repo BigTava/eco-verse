@@ -55,6 +55,7 @@ export default function CreateCommunity() {
         (val) => val !== null && val !== ""
       );
     }
+    return true;
   };
 
   const handleNext = async () => {
@@ -85,7 +86,7 @@ export default function CreateCommunity() {
         onError: (error) => handleError(id, error),
       });
     }
-    console.log(activeStep);
+
     if (activeStep === 2) {
       navigate("/dashboard");
     }
@@ -93,6 +94,7 @@ export default function CreateCommunity() {
 
   const handleSuccess = async (toastId: ReactText, tx: ContractTransaction) => {
     await tx.wait();
+    setActiveStep(2);
     toast.update(toastId, {
       render: "Community created!",
       type: toast.TYPE.SUCCESS,
@@ -100,7 +102,6 @@ export default function CreateCommunity() {
       isLoading: false,
       autoClose: 1000,
     });
-    setActiveStep(2);
   };
 
   const handleError = (toastId: ReactText, error: any) => {

@@ -8,7 +8,7 @@ import { useMoralis } from "react-moralis";
 
 // Utils
 import { isSupportedChain } from "utils/networks";
-/*eslint-disable*/
+
 const ProtectedRoute = () => {
   const { user } = useUser();
   const { chainId } = useMoralis();
@@ -39,9 +39,7 @@ const ProtectedRoute = () => {
       }
     })();
   }, [user]);
-  console.log(!!user);
-  console.log(chainId);
-  console.log(isSupportedChain(Number(chainId)));
+
   return !!user && isSupportedChain(Number(chainId)) ? (
     <Outlet />
   ) : (

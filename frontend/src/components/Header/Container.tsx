@@ -9,9 +9,10 @@ type HeaderContainerProps = {
   children: React.ReactNode;
 };
 export default function HeaderContainer(props: HeaderContainerProps) {
-  const { communityAddress } = useUser();
+  const { community } = useUser();
+  console.log(community);
 
-  if (!communityAddress) {
+  if (!community) {
     return (
       <Container className="relative z-50 flex justify-between py-8">
         {props.children}

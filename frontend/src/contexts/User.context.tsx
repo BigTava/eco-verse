@@ -12,7 +12,7 @@ type ParticipantType = {
 export const UserProvider = ({ children }: any) => {
   const { setWeb3 } = useWeb3();
   const [user, setUser] = useState<any>(localStorage.getItem("user"));
-  const [communityAddress, setCommunityAddress] = useState<string | null>(null);
+  const [community, setCommunity] = useState<string | null>(null);
   const [participant, setParticipant] = useState<ParticipantType | null>(null);
 
   const handleUserOnPageLoad = async () => {
@@ -46,8 +46,8 @@ export const UserProvider = ({ children }: any) => {
     <UserContext.Provider
       value={{
         ...value,
-        communityAddress,
-        setCommunityAddress,
+        community,
+        setCommunity,
         participant,
         setParticipant,
       }}

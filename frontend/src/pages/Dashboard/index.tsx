@@ -4,9 +4,9 @@ import { useUser } from "contexts/User.context";
 // Utils
 /*eslint-disable*/
 const Dashboard = () => {
-  const { communityAddress } = useUser();
+  const { community } = useUser();
 
-  console.log(communityAddress);
+  console.log(community);
   return <></>;
 };
 

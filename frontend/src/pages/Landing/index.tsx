@@ -7,10 +7,10 @@ import { Hero } from "./Hero";
 
 // Images
 const Landing = () => {
-  const { setCommunityAddress } = useUser();
+  const { setCommunity } = useUser();
 
   useEffect(() => {
-    setCommunityAddress(null);
+    setCommunity(null);
   }, []);
 
   return <Hero />;

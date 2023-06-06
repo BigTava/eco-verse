@@ -17,7 +17,7 @@ import HeaderContainer from "./Container";
 export function Header() {
   const navigate = useNavigate();
   const { Moralis } = useMoralis();
-  const { setUser, user, communityAddress } = useUser();
+  const { setUser, user, community } = useUser();
   const { setWeb3 } = useWeb3();
 
   const [openWalletModal, setOpenWalletModal] = useState<boolean>(false);
@@ -68,7 +68,7 @@ export function Header() {
                 width="160px"
               ></img>
             </a>
-            {!communityAddress && (
+            {!community && (
               <NavLinks
                 labels={[
                   ["Discover", "#discover"],
@@ -93,7 +93,7 @@ export function Header() {
               >
                 {!isLoggedIn ? "Login" : "My Account"}
               </DefaultButton>
-              {isLoggedIn && !communityAddress && (
+              {isLoggedIn && !community && (
                 <DefaultButton
                   variant="outline"
                   color="gray"

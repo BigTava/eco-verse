@@ -50,7 +50,7 @@ contract CommunityFactory {
     }
 
     /* Getter Functions */
-    function getMyCommunity() public view returns (address) {
+    function getCommunity() public view returns (address) {
         return s_communities[msg.sender];
     }
 
