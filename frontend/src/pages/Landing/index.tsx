@@ -4,6 +4,7 @@ import { useUser } from "contexts/User.context";
 
 // Components
 import { Hero } from "./Hero";
+import { Features } from "./Features";
 
 // Images
 const Landing = () => {
@@ -13,7 +14,14 @@ const Landing = () => {
     setCommunity(null);
   }, []);
 
-  return <Hero />;
+  return (
+    <>
+      <Hero />
+      <div className="divider" />
+      <Features />
+      <div className="divider" />
+    </>
+  );
 };
 
 export default Landing;

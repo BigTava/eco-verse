@@ -4,7 +4,6 @@ import { useUser } from "contexts/User.context";
 import { useWeb3 } from "contexts/Web3.context";
 
 // Components
-import Divider from "components/Divider";
 import CardLabel from "components/Cards/MagicCard/Label";
 import Card from "components/Cards/MagicCard";
 import CardHeader from "components/Cards/MagicCard/Header";
@@ -82,13 +81,13 @@ const AccountModal = (props: WalletModalPros) => {
           <div className="green-dot" />
           <div className="connected">Connected</div>
         </div>
-        <Divider />
+        <div className="divider" />
         <CardLabel
           leftHeader="Address"
           rightAction={<div onClick={copy}>{copied}</div>}
         />
         <div className="code">{user}</div>
-        <Divider />
+        <div className="divider" />
         <CardLabel
           style={{ height: "20px" }}
           leftHeader="Balance"

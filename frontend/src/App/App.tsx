@@ -5,12 +5,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 // Components
 import { Header } from "../components/Header";
-import { Features } from "../components/Features";
 
 // Others
 import Providers from "./Providers";
 import Router from "./Router";
-import Divider from "components/Divider";
 
 const App = () => {
   return (
@@ -30,9 +28,6 @@ const App = () => {
         />
         <Header />
         <Router />
-        <Divider />
-        <Features />
-        <Divider />
       </Providers>
     </BrowserRouter>
   );
