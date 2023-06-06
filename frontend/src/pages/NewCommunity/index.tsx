@@ -8,7 +8,7 @@ import { ContractTransaction } from "ethers";
 import { useNavigate } from "react-router-dom";
 
 // Components
-import { AuthLayout } from "components/Layouts/AuthLayout";
+import { FormLayout } from "components/Layouts/FormLayout";
 import { DefaultButton } from "components/Buttons/DefaultButton";
 
 // Form
@@ -19,7 +19,7 @@ import { communityFactoryAbi, contractAddresses } from "utils/constants";
 import { isSupportedChain } from "utils/networks";
 
 // Others
-import Navigation from "./Navigation";
+import Navigation from "components/Navigation";
 
 export default function CreateCommunity() {
   const navigate = useNavigate();
@@ -144,9 +144,13 @@ export default function CreateCommunity() {
     }
   };
   return (
-    <AuthLayout title="Create an Energy Community">
+    <FormLayout title="Create an Energy Community">
       <div className="sm:pb-8">
-        <Navigation activeStep={activeStep} setActiveStep={setActiveStep} />
+        <Navigation
+          activeStep={activeStep}
+          setActiveStep={setActiveStep}
+          numberOfSteps={2}
+        />
       </div>
 
       {getStep(activeStep).form}
@@ -158,6 +162,6 @@ export default function CreateCommunity() {
       >
         {getStep(activeStep).buttonText}
       </DefaultButton>
-    </AuthLayout>
+    </FormLayout>
   );
 }

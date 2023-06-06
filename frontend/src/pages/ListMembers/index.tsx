@@ -1,16 +1,14 @@
 // Core
-import { useState } from "react";
 import { useUser } from "contexts/User.context";
+import { useNavigate } from "react-router-dom";
 
 // Components
-import DefaultModal from "components/Modals/DefaultModal";
-import NewMember from "pages/NewMember";
 import MembersTable from "./Table";
 
 export default function ListMembers() {
-  const { community } = useUser();
+  const navigate = useNavigate();
 
-  const [showNewMemberModal, setShowNewMemberModal] = useState(false);
+  const { community } = useUser();
 
   console.log(community);
 
@@ -28,7 +26,7 @@ export default function ListMembers() {
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
             type="button"
-            onClick={() => setShowNewMemberModal(true)}
+            onClick={() => navigate("/new-member")}
             className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             New Member
@@ -42,12 +40,6 @@ export default function ListMembers() {
           </div>
         </div>
       </div>
-      <DefaultModal
-        showModal={showNewMemberModal}
-        closeFunction={() => setShowNewMemberModal(false)}
-      >
-        <NewMember />
-      </DefaultModal>
     </main>
   );
 }

@@ -17,13 +17,13 @@ function BackgroundIllustration(props) {
   );
 }
 
-type AuthLayoutProps = {
+type FormLayoutProps = {
   title?: string;
   subtitle?: string | React.ReactElement;
   children: React.ReactNode;
 };
 
-export function AuthLayout(props: AuthLayoutProps) {
+export function FormLayout(props: FormLayoutProps) {
   return (
     <>
       <main className="flex min-h-full overflow-hidden pt-2 sm:py-4">

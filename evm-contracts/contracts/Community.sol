@@ -147,4 +147,8 @@ contract Community is Ownable {
     function getGovernance() public view returns (address) {
         return address(s_governance);
     }
+
+    fallback() external payable {}
+
+    receive() external payable {}
 }

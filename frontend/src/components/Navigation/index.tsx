@@ -7,6 +7,7 @@ function classNames(...classes) {
 type NavigationProps = {
   activeStep: number;
   setActiveStep: (activeStep: number) => void;
+  numberOfSteps: number;
 };
 
 function getStatus(myStep: number, activeStep: number) {
@@ -19,10 +20,14 @@ function getStatus(myStep: number, activeStep: number) {
   }
 }
 export default function Navigation(props: NavigationProps) {
-  const steps = [
-    { name: "1", href: "#", status: getStatus(1, props.activeStep) },
-    { name: "2", href: "#", status: getStatus(2, props.activeStep) },
-  ];
+  const steps = Array.from({ length: props.numberOfSteps }, (_, i) => {
+    return {
+      name: (i + 1).toString(),
+      href: "#",
+      status: getStatus(i + 1, props.activeStep),
+    };
+  });
+
   return (
     <nav aria-label="Progress">
       <ol role="list" className="mx-auto flex items-center justify-center">

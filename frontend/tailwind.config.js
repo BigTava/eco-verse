@@ -35,6 +35,9 @@ module.exports = {
         "spin-reverse-slow": "spin-reverse 4s linear infinite",
         "spin-reverse-slower": "spin-reverse 6s linear infinite",
       },
+      inset: {
+        "2/5": "40%",
+      },
       borderRadius: {
         "4xl": "2rem",
         "5xl": "2.5rem",

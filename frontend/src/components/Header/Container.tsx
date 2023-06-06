@@ -10,7 +10,6 @@ type HeaderContainerProps = {
 };
 export default function HeaderContainer(props: HeaderContainerProps) {
   const { community } = useUser();
-  console.log(community);
 
   if (!community) {
     return (
