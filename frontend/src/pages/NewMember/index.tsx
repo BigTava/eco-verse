@@ -106,7 +106,7 @@ export default function NewMember() {
         onError: (error) => handleError(id, error),
       });
     } else if (activeStep === 3) {
-      navigate("/dashboard");
+      navigate("/members");
     }
   };
 
@@ -129,6 +129,16 @@ export default function NewMember() {
             <RoleInfo values={roleInfoValues} onChange={setRoleInfoValues} />
           ),
           buttonText: "Final Step!",
+        };
+
+      case 3:
+        return {
+          form: (
+            <div className="w-100 text-center">
+              {generalInfoValues.publicAddress} was successfully added!
+            </div>
+          ),
+          buttonText: "Next",
         };
 
       default:

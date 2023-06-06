@@ -56,6 +56,9 @@ contract Community is Ownable {
 
     mapping(address => Member) private s_members; // member -> details
 
+    //----------------- Temp variables (for indexor) ------
+    address[] public s_members_array; // array of members
+
     //----------------- Events ----------------------------
     event MemberEnter(address indexed member);
     event GovernanceCreation(address indexed governance, address indexed timelock);
@@ -95,6 +98,7 @@ contract Community is Ownable {
             MemberStatus.ACTIVE
         );
 
+        s_members_array.push(_member);
         _mintMembership(_member, _memberType);
     }
 

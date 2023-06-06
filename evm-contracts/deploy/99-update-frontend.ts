@@ -17,6 +17,8 @@ const COMMUNITY_FACTORY_FRONTEND_END_ABI_FILE = path.resolve(
     "communityFactoryAbi.json"
 )
 
+const COMMUNITY_FRONTEND_END_ABI_FILE = path.resolve(COMMON_PATH, "communityAbi.json")
+
 const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { network, ethers } = hre
     const chainId = network.config.chainId?.toString()!
@@ -50,10 +52,10 @@ const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment)
                 communityFactory: communityFactory.address,
             }
         }
+        fs.writeFileSync(FRONTEND_END_ADDRESSES_FILE, JSON.stringify(contractAddresses))
 
         // ABI files
         console.log("Writing to front end contracts ABIs...")
-        fs.writeFileSync(FRONTEND_END_ADDRESSES_FILE, JSON.stringify(contractAddresses))
 
         const crowdlendingFactoryFormattedData = crowdlendingFactory.interface.format(
             ethers.utils.FormatTypes.json
@@ -68,6 +70,21 @@ const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment)
             )
         !Array.isArray(communityFactoryFormattedData) &&
             fs.writeFileSync(COMMUNITY_FACTORY_FRONTEND_END_ABI_FILE, communityFactoryFormattedData)
+
+        const abi = JSON.parse(
+            fs.readFileSync(
+                path.resolve(
+                    __dirname,
+                    "..",
+                    "artifacts",
+                    "contracts",
+                    "Community.sol",
+                    "Community.json"
+                ),
+                "utf8"
+            )
+        ).abi
+        fs.writeFileSync(COMMUNITY_FRONTEND_END_ABI_FILE, JSON.stringify(abi, null, 2))
 
         console.log("Front end written!")
     }
