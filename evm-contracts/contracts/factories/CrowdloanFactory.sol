@@ -4,13 +4,13 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
-import "../Crowdlending.sol";
+import "../Crowdloan.sol";
 
-/** @title Crowdlending Factory Contract
+/** @title Crowdloan Factory Contract
  *  @author EcoVerse Team
  *  @notice This factory contract allows creating and tracking crowdlending campaigns for energy communities
  */
-contract CrowdlendingFactory is Ownable {
+contract CrowdloanFactory is Ownable {
     //----------------- Type declarations -----------------
 
     //----------------- State variables -------------------
@@ -31,7 +31,7 @@ contract CrowdlendingFactory is Ownable {
         uint256 _startAt,
         uint256 _endAt
     ) public onlyOwner returns (address campaignAddress) {
-        Crowdlending newCampaign = new Crowdlending(_token);
+        Crowdloan newCampaign = new Crowdloan(_token);
 
         newCampaign.launch(_owner, _apy, _goal, _startAt, _endAt);
         campaignAddress = address(newCampaign);

@@ -6,18 +6,18 @@ import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "hardhat/console.sol";
 
 /* Errors */
-error Crowdlending__InvalidDate();
-error Crowdlending__ErrorLaunchingCampaign();
-error Crowdlending__ErrorPledging();
-error Crowdlending__ErrorUnpledging();
-error Crowdlending__ErrorClaiming();
-error Crowdlending__ErrorRepaying();
+error Crowdloan__InvalidDate();
+error Crowdloan__ErrorLaunchingCampaign();
+error Crowdloan__ErrorPledging();
+error Crowdloan__ErrorUnpledging();
+error Crowdloan__ErrorClaiming();
+error Crowdloan__ErrorRepaying();
 
 /**
  * @dev This contract is designed to handle the logic for managing a
  * single crowdlending campaign.
  */
-contract Crowdlending is Ownable {
+contract Crowdloan is Ownable {
     //----------------- Type declarations -----------------
     enum CampaignState {
         OPEN,
@@ -67,7 +67,7 @@ contract Crowdlending is Ownable {
         uint256 _endAt
     ) external onlyOwner {
         if (_endAt < _startAt || s_state != CampaignState.OPEN) {
-            revert Crowdlending__InvalidDate();
+            revert Crowdloan__InvalidDate();
         }
 
         s_campaign = Campaign({
@@ -92,7 +92,7 @@ contract Crowdlending is Ownable {
             i_token.balanceOf(msg.sender) < _amount ||
             s_campaign.pledged + _amount > s_campaign.goal
         ) {
-            revert Crowdlending__ErrorPledging();
+            revert Crowdloan__ErrorPledging();
         }
 
         i_token.transferFrom(msg.sender, address(this), _amount);
@@ -107,7 +107,7 @@ contract Crowdlending is Ownable {
     function repay(uint _amount) external {
         if (_amount < (s_campaign.pledged * s_campaign.apy) / 100 + s_campaign.pledged) {
             // creators can not repay an amount smaller than the pledged + APY
-            revert Crowdlending__ErrorRepaying();
+            revert Crowdloan__ErrorRepaying();
         }
         i_token.transferFrom(msg.sender, address(this), _amount);
 
@@ -122,7 +122,7 @@ contract Crowdlending is Ownable {
             s_campaign.claimed
         ) {
             // creators can not claim funds if they have already claimed
-            revert Crowdlending__ErrorClaiming();
+            revert Crowdloan__ErrorClaiming();
         }
         s_campaign.claimed = true;
         uint value = s_campaign.pledged;
@@ -139,7 +139,7 @@ contract Crowdlending is Ownable {
             pledgedAmount[msg.sender] >= _amount
         ) {
             // users can not unpledge more than they already have pledged
-            revert Crowdlending__ErrorUnpledging();
+            revert Crowdloan__ErrorUnpledging();
         }
 
         i_token.transferFrom(address(this), msg.sender, _amount);
@@ -154,7 +154,7 @@ contract Crowdlending is Ownable {
     function claimPledged() external {
         if (block.timestamp <= s_campaign.endAt) {
             // users can not claim before the campaign ends
-            revert Crowdlending__ErrorClaiming();
+            revert Crowdloan__ErrorClaiming();
         }
 
         uint pa = pledgedAmount[msg.sender];

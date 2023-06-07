@@ -25,6 +25,7 @@
     "moralis-v1": "^1.13.0",
     "mui-datatables": "^4.2.2",
     "react": "^18.2.0",
+    "react-datepicker": "^4.12.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.40.0",
     "react-is": "^18.2.0",

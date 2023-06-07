@@ -8,19 +8,21 @@ import { useUser } from "contexts/User.context";
 
 // Components
 import Navigation from "components/Navigation";
-import GeneralInfo, {
-  GeneralInfoValuesType,
-  typeOptions,
-  typeEnumToMemberType,
-} from "./GeneralInfo";
-import RoleInfo, { RoleInfoValuesType } from "./Role";
+
 import { FormLayout } from "components/Layouts/FormLayout";
 import { DefaultButton } from "components/Buttons/DefaultButton";
+
+import GeneralInfo, {
+  typeOptions,
+  GeneralInfoValuesType,
+  typeEnumToMemberType,
+} from "./General";
+import RoleInfo, { RoleInfoValuesType } from "./Role";
 
 // Utils
 import { communityAbi } from "utils/constants";
 
-export default function NewMember() {
+export default function NewCrowdloan() {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(1);
 

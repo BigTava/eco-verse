@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-interface ICrowdlendingFactory {
+interface ICrowdloanFactory {
     function createCampaign(
         address _owner,
         uint32 _apy,

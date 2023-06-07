@@ -4,7 +4,7 @@ const navRoutes = [
   { name: "Dashboard", route: "/dashboard", icon: HomeIcon, current: true },
   { name: "Members", route: "/members", icon: UsersIcon, current: false },
   {
-    name: "Crowdloans",
+    name: "Financing",
     route: "/crowdloans",
     icon: FolderIcon,
     current: false,

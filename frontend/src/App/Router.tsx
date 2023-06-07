@@ -2,17 +2,27 @@ import React from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 import Landing from "../pages/Landing";
 
-// Components
+/* Components */
 import ProtectedRoute from "components/ProtectedRoute";
 import Prefecth from "components/Prefetch";
 
-// Pages
-import NewCommunity from "pages/NewCommunity";
-import ListCampaigns from "pages/ListCampaigns";
+/* Pages */
+// Landing
 import Roadmap from "pages/Roadmap/Roadmap";
+import NewCommunity from "pages/NewCommunity";
+
+// General
 import Dashboard from "pages/Dashboard";
+
+// Members
 import ListMembers from "pages/ListMembers";
 import NewMember from "pages/NewMember";
+
+// Financing
+import ListCrowdloans from "pages/ListCrowdloans";
+import NewCrowdloan from "pages/NewCrowdloan";
+
+// Governance
 import ListProposals from "pages/ListProposals";
 
 const Router = () => {
@@ -21,15 +31,16 @@ const Router = () => {
       <Route path="/" element={<Outlet />}>
         <Route index element={<Landing />} />
         <Route path="create-community" element={<NewCommunity />} />
-        <Route path="campaigns" element={<ListCampaigns />} />
+        <Route path="campaigns" element={<ListCrowdloans />} />
         <Route path="roadmap" element={<Roadmap />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<Prefecth />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="members" element={<ListMembers />} />
             <Route path="new-member" element={<NewMember />} />
-            <Route path="crowdloans" element={<ListCampaigns />} />
+            <Route path="crowdloans" element={<ListCrowdloans />} />
             <Route path="governance" element={<ListProposals />} />
+            <Route path="new-crowdloan" element={<NewCrowdloan />} />
           </Route>
         </Route>
       </Route>

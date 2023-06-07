@@ -29,7 +29,7 @@
     "no-duplicate-imports": "error",
     "no-empty": "error",
     "no-inline-comments": "error",
-    // "import/order": "error",
+    "react/no-unknown-property": "warn",
     "@typescript-eslint/no-unused-vars": "error",
     "prettier/prettier": [
       "error",

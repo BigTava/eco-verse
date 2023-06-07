@@ -24,7 +24,7 @@ import Navigation from "components/Navigation";
 export default function CreateCommunity() {
   const navigate = useNavigate();
 
-  const { user } = useUser();
+  const { user, setCommunity } = useUser();
   const { web3 } = useWeb3();
 
   const [activeStep, setActiveStep] = useState(1);
@@ -93,7 +93,13 @@ export default function CreateCommunity() {
   };
 
   const handleSuccess = async (toastId: ReactText, tx: ContractTransaction) => {
-    await tx.wait();
+    const transactionReceipt = await tx.wait();
+
+    const eventsLength = transactionReceipt.events!.length;
+    const communityAddress =
+      transactionReceipt.events![eventsLength - 1].args![0];
+
+    setCommunity(communityAddress);
     setActiveStep(2);
     toast.update(toastId, {
       render: "Community created!",
