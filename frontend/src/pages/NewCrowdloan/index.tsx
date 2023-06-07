@@ -40,7 +40,7 @@ export default function NewCrowdloan() {
   const { runContractFunction: newCrowdloan } = useWeb3Contract({
     abi: crowdloanFactoryAbi,
     contractAddress: contractAddresses["31337"]["crowdloanFactory"],
-    functionName: "createCampaign",
+    functionName: "createCrowdloan",
     params: {
       _apy: Number(financeValues.apy),
       _token: assetToAddress[generalInfoValues.asset],

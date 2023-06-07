@@ -4,7 +4,7 @@ import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { developmentChains, VERIFICATION_BLOCK_CONFIRMATIONS } from "../helper-hardhat-config"
 import verify from "../utils/verify"
 
-const deployCrowdlendingFactory: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployCrowdloanFactory: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployments, getNamedAccounts, network } = hre
     const { deploy, log } = deployments
     const { deployer } = await getNamedAccounts()
@@ -29,5 +29,5 @@ const deployCrowdlendingFactory: DeployFunction = async function (hre: HardhatRu
 
     log("----------------------------------------------------")
 }
-export default deployCrowdlendingFactory
-deployCrowdlendingFactory.tags = ["all", "core", "deploy", "crowdlendingFactory"]
+export default deployCrowdloanFactory
+deployCrowdloanFactory.tags = ["all", "core", "deploy", "crowdloanFactory"]

@@ -4,6 +4,8 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
 
+import "../libs/CrowdloanLib.sol";
+import "../interfaces/ICrowdloan.sol";
 import "../Crowdloan.sol";
 
 /** @title Crowdloan Factory Contract
@@ -12,44 +14,62 @@ import "../Crowdloan.sol";
  */
 contract CrowdloanFactory is Ownable {
     //----------------- Type declarations -----------------
+    using CrowdloanLib for CrowdloanLib.Campaign;
 
     //----------------- State variables -------------------
-    mapping(address => address[]) private s_campaigns; // owner address -> campaigns addresses
+    mapping(address => address[]) private s_crowdloans; // owner address -> crowdloans addresses
 
     //----------------- Temp variables (for indexer) ------
-    address[] private s_campaigns_array; // array of campaigns
+    address[] private s_crowdloans_array; // array of crowdloans
 
     //----------------- Events ----------------------------
-    event NewCampaign(address indexed campaign);
+    event NewCrowdloan(address indexed crowdloan);
 
     //----------------- Modifiers -------------------------
 
     //----------------- Functions -------------------------
     constructor() {}
 
-    function createCampaign(
+    function createCrowdloan(
         uint32 _apy,
         address _token,
         uint _goal,
         uint256 _startAt,
         uint256 _endAt
-    ) public returns (address campaignAddress) {
-        Crowdloan newCampaign = new Crowdloan(_token);
+    ) public returns (address _crowdloanAddress) {
+        Crowdloan newCrowdloan = new Crowdloan(_token);
 
-        newCampaign.launch(msg.sender, _apy, _goal, _startAt, _endAt);
-        campaignAddress = address(newCampaign);
-        s_campaigns_array.push(campaignAddress);
+        newCrowdloan.launch(msg.sender, _apy, _goal, _startAt, _endAt);
+        _crowdloanAddress = address(newCrowdloan);
+        s_crowdloans_array.push(_crowdloanAddress);
 
-        s_campaigns[msg.sender].push();
-        emit NewCampaign(campaignAddress);
+        s_crowdloans[msg.sender].push(_crowdloanAddress);
+        emit NewCrowdloan(_crowdloanAddress);
     }
 
     /* Getter Functions */
-    function getAllCampaigns() public view returns (address[] memory) {
-        return s_campaigns_array;
+    function getAllCrowdloans() public view returns (address[] memory) {
+        return s_crowdloans_array;
     }
 
-    function getAllCampaignsByOwner(address _owner) public view returns (address[] memory) {
-        return s_campaigns[_owner];
+    function getAllCampaignsByOwner(
+        address _owner
+    )
+        public
+        view
+        returns (
+            address[] memory _crowdloans,
+            CrowdloanLib.CrowdloanState[] memory _states,
+            CrowdloanLib.Campaign[] memory _campaigns
+        )
+    {
+        _crowdloans = s_crowdloans[_owner];
+        _states = new CrowdloanLib.CrowdloanState[](_crowdloans.length);
+        _campaigns = new CrowdloanLib.Campaign[](_crowdloans.length);
+
+        for (uint i = 0; i < _crowdloans.length; i++) {
+            _states[i] = ICrowdloan(_crowdloans[i]).getCrowdloanState();
+            _campaigns[i] = ICrowdloan(_crowdloans[i]).getCampaign();
+        }
     }
 }

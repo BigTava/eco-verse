@@ -1,8 +1,13 @@
 // Core
 import { useState, useEffect } from "react";
+import { BigNumber } from "ethers";
+import { DateTime } from "luxon";
 
 // Components
 import MuiTable from "components/Tables/MuiTable";
+
+// Utils
+import { Campaign, crowdloanStateToLabel } from "utils/types/crowdloans.types";
 
 // Columns
 const defaultColumns = [
@@ -71,41 +76,57 @@ const defaultColumns = [
   },
 ];
 
+type Data = {
+  _campaigns: Campaign[];
+  _crowdloans: string[];
+  _states: number[];
+};
+
 type CrowdloansTableProps = {
-  data: string[];
+  data: Data;
 };
 
 type Rows = {
   address: string;
-  startAt: string;
-  endAt: string;
+  activationDate: string;
+  expirationDate: string;
   asset: string;
-  apy: number;
-  goal: number;
-  loaned: number;
-  claimed: number;
+  apy: string;
+  goal: string;
+  loaned: string;
+  claimed: boolean;
   status: string;
   message: string;
 };
 
 export default function CrowdloansTable({ data }: CrowdloansTableProps) {
+  console.log(data);
   // Rows
   const [rows, setRows] = useState<Rows[]>([]);
 
   useEffect(() => {
+    console.log(data?._campaigns[0]);
     setRows(
-      data?.map((address: any) => ({
-        address: address,
-        startAt: "2022-01-01",
-        endAt: "ACTIVE",
-        asset: "ECO Mock",
-        apy: 10,
-        goal: 10000,
-        loaned: 100,
-        claimed: 0,
-        status: "ACTIVE",
-        message: "2 days to claim",
-      }))
+      data?._crowdloans?.map((address: any, index: number) => {
+        const startAt = Number(data._campaigns[index].startAt as BigNumber);
+        const endAt = Number(data._campaigns[index].endAt as BigNumber);
+        return {
+          address: address,
+          activationDate: DateTime.fromJSDate(new Date(startAt)).toFormat(
+            "yyyy-MM-dd"
+          ),
+          expirationDate: DateTime.fromJSDate(new Date(endAt)).toFormat(
+            "yyyy-MM-dd"
+          ),
+          asset: "ECO Mock",
+          apy: (data._campaigns[index].apy as BigNumber).toString(),
+          goal: (data._campaigns[index].goal as BigNumber).toString(),
+          loaned: (data._campaigns[index].pledged as BigNumber).toString(),
+          claimed: data._campaigns[index].claimed,
+          status: crowdloanStateToLabel[data._states[index]],
+          message: "2 days to claim",
+        };
+      })
     );
   }, [data]);
 

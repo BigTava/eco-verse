@@ -35,7 +35,7 @@ const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment)
 
         if (contractAddresses && chainId in contractAddresses) {
             if (!Object.values(contractAddresses[chainId]).includes(crowdloanFactory.address)) {
-                contractAddresses[chainId]["crowdlendingFactory"] = crowdloanFactory.address
+                contractAddresses[chainId]["crowdloanFactory"] = crowdloanFactory.address
             }
 
             if (!Object.values(contractAddresses[chainId]).includes(communityFactory.address)) {

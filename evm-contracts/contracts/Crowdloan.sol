@@ -5,6 +5,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "hardhat/console.sol";
 
+import "./libs/CrowdloanLib.sol";
+
 /* Errors */
 error Crowdloan__InvalidDate();
 error Crowdloan__ErrorLaunchingCampaign();
@@ -19,27 +21,13 @@ error Crowdloan__ErrorRepaying();
  */
 contract Crowdloan is Ownable {
     //----------------- Type declarations -----------------
-    enum CampaignState {
-        OPEN,
-        LAUNCHED,
-        COMPLETED
-    }
-
-    struct Campaign {
-        address creator;
-        uint32 apy;
-        uint goal;
-        uint pledged;
-        uint startAt;
-        uint endAt;
-        bool claimed;
-    }
+    using CrowdloanLib for CrowdloanLib.Campaign;
 
     //----------------- State variables -------------------
     uint private s_totalPledgedAmount;
     IERC20 private immutable i_token;
-    Campaign private s_campaign;
-    CampaignState private s_state;
+    CrowdloanLib.Campaign private s_campaign;
+    CrowdloanLib.CrowdloanState private s_state;
 
     mapping(address => uint) public pledgedAmount;
 
@@ -56,7 +44,7 @@ contract Crowdloan is Ownable {
     //----------------- Functions -------------------------
     constructor(address _token) {
         i_token = IERC20(_token);
-        s_state = CampaignState.OPEN;
+        s_state = CrowdloanLib.CrowdloanState.OPEN;
     }
 
     function launch(
@@ -66,11 +54,11 @@ contract Crowdloan is Ownable {
         uint256 _startAt,
         uint256 _endAt
     ) external onlyOwner {
-        if (_endAt < _startAt || s_state != CampaignState.OPEN) {
+        if (_endAt < _startAt || s_state != CrowdloanLib.CrowdloanState.OPEN) {
             revert Crowdloan__InvalidDate();
         }
 
-        s_campaign = Campaign({
+        s_campaign = CrowdloanLib.Campaign({
             creator: _creator,
             apy: _apy,
             goal: _goal,
@@ -81,7 +69,7 @@ contract Crowdloan is Ownable {
         });
 
         transferOwnership(_creator);
-        s_state = CampaignState.LAUNCHED;
+        s_state = CrowdloanLib.CrowdloanState.LAUNCHED;
         emit Launch(msg.sender, _apy, _goal, _startAt, _endAt);
     }
 
@@ -167,6 +155,15 @@ contract Crowdloan is Ownable {
         s_campaign.pledged -= pa;
 
         emit Claim(pa);
+    }
+
+    /* Getter Functions */
+    function getCampaign() public view returns (CrowdloanLib.Campaign memory) {
+        return s_campaign;
+    }
+
+    function getCrowdloanState() public view returns (CrowdloanLib.CrowdloanState) {
+        return s_state;
     }
 
     fallback() external payable {}
