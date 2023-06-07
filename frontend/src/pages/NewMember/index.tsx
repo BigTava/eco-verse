@@ -18,7 +18,7 @@ import { FormLayout } from "components/Layouts/FormLayout";
 import { DefaultButton } from "components/Buttons/DefaultButton";
 
 // Utils
-import { communityAbi } from "utils/constants";
+import { communityAbi } from "utils/abis";
 
 export default function NewMember() {
   const navigate = useNavigate();

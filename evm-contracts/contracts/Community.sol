@@ -6,7 +6,7 @@ import "hardhat/console.sol";
 
 import "./CommunityItems.sol";
 
-import "./interfaces/ICrowdlendingFactory.sol";
+import "./interfaces/ICrowdloanFactory.sol";
 import "./interfaces/IGovernance.sol";
 import "./interfaces/ITimeLock.sol";
 import "./interfaces/ICommunityItems.sol";
@@ -52,7 +52,7 @@ contract Community is Ownable {
     ICommunityItems private i_communityItems;
     ITimeLock private s_timeLock;
     IGovernance private s_governance;
-    ICrowdlendingFactory private s_crowdlendingFactory;
+    ICrowdloanFactory private s_crowdlendingFactory;
 
     mapping(address => Member) private s_members; // member -> details
 
@@ -116,7 +116,7 @@ contract Community is Ownable {
 
     /* Setter Functions */
     function setCrowdlendingFactory(address _crowdlendingFactory) public onlyOwner {
-        s_crowdlendingFactory = ICrowdlendingFactory(_crowdlendingFactory);
+        s_crowdlendingFactory = ICrowdloanFactory(_crowdlendingFactory);
     }
 
     function setGovernance(address _governance) public onlyOwner {

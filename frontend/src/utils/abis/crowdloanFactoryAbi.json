@@ -1,0 +1,66 @@
+[
+  { "type": "constructor", "payable": false, "inputs": [] },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "NewCampaign",
+    "inputs": [{ "type": "address", "name": "campaign", "indexed": true }]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "OwnershipTransferred",
+    "inputs": [
+      { "type": "address", "name": "previousOwner", "indexed": true },
+      { "type": "address", "name": "newOwner", "indexed": true }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "createCampaign",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "uint32", "name": "_apy" },
+      { "type": "address", "name": "_token" },
+      { "type": "uint256", "name": "_goal" },
+      { "type": "uint256", "name": "_startAt" },
+      { "type": "uint256", "name": "_endAt" }
+    ],
+    "outputs": [{ "type": "address", "name": "campaignAddress" }]
+  },
+  {
+    "type": "function",
+    "name": "getAllCampaigns",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "address[]" }]
+  },
+  {
+    "type": "function",
+    "name": "owner",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "address" }]
+  },
+  {
+    "type": "function",
+    "name": "renounceOwnership",
+    "constant": false,
+    "payable": false,
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "transferOwnership",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "newOwner" }],
+    "outputs": []
+  }
+]

@@ -5,7 +5,8 @@ import { useUser } from "contexts/User.context";
 import { useQuery } from "@tanstack/react-query";
 
 // Utils
-import { communityFactoryAbi, contractAddresses } from "utils/constants";
+import { communityFactoryAbi } from "utils/abis";
+import { contractAddresses } from "utils/addresses";
 import { isZeroAddress } from "utils/ethers";
 
 // Components

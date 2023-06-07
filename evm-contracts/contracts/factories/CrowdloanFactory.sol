@@ -14,9 +14,13 @@ contract CrowdloanFactory is Ownable {
     //----------------- Type declarations -----------------
 
     //----------------- State variables -------------------
-    address[] private allCampaigns;
+    mapping(address => address) private s_campaigns; // owner address -> community address
+
+    //----------------- Temp variables (for indexer) ------
+    address[] private s_campaigns_array; // array of members
 
     //----------------- Events ----------------------------
+    event NewCampaign(address indexed campaign);
 
     //----------------- Modifiers -------------------------
 
@@ -24,22 +28,24 @@ contract CrowdloanFactory is Ownable {
     constructor() {}
 
     function createCampaign(
-        address _owner,
         uint32 _apy,
         address _token,
         uint _goal,
         uint256 _startAt,
         uint256 _endAt
-    ) public onlyOwner returns (address campaignAddress) {
+    ) public returns (address campaignAddress) {
         Crowdloan newCampaign = new Crowdloan(_token);
 
-        newCampaign.launch(_owner, _apy, _goal, _startAt, _endAt);
+        newCampaign.launch(msg.sender, _apy, _goal, _startAt, _endAt);
         campaignAddress = address(newCampaign);
-        allCampaigns.push(campaignAddress);
+        s_campaigns_array.push(campaignAddress);
+
+        s_campaigns[msg.sender] = campaignAddress;
+        emit NewCampaign(campaignAddress);
     }
 
     /* Getter Functions */
     function getAllCampaigns() public view returns (address[] memory) {
-        return allCampaigns;
+        return s_campaigns_array;
     }
 }

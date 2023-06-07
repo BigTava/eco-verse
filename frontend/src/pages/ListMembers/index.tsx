@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import MembersTable from "./Table";
 
 // Utils
-import { communityAbi } from "utils/constants";
+import { communityAbi } from "utils/abis";
 
 export default function ListMembers() {
   const navigate = useNavigate();

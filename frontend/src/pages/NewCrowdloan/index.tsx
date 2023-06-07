@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useWeb3Contract } from "react-moralis";
 import { toast } from "react-toastify";
 import { ContractTransaction } from "ethers";
-import { useUser } from "contexts/User.context";
 
 // Components
 import Navigation from "components/Navigation";
@@ -12,45 +11,42 @@ import Navigation from "components/Navigation";
 import { FormLayout } from "components/Layouts/FormLayout";
 import { DefaultButton } from "components/Buttons/DefaultButton";
 
-import GeneralInfo, {
-  typeOptions,
-  GeneralInfoValuesType,
-  typeEnumToMemberType,
-} from "./General";
-import RoleInfo, { RoleInfoValuesType } from "./Role";
+import GeneralInfo, { GeneralValuesType } from "./General";
+import Finance, { FinanceValuesType } from "./Finance";
 
 // Utils
-import { communityAbi } from "utils/constants";
+import { crowdloanFactoryAbi } from "utils/abis";
+import { contractAddresses } from "utils/addresses";
+import { assets, assetToAddress } from "utils/assets";
 
 export default function NewCrowdloan() {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(1);
 
-  const { community } = useUser();
+  const [generalInfoValues, setGeneralInfoValues] = useState<GeneralValuesType>(
+    {
+      startDate: new Date(),
+      endDate: new Date(),
+      asset: assets[0].value,
+    }
+  );
 
-  const [generalInfoValues, setGeneralInfoValues] =
-    useState<GeneralInfoValuesType>({
-      publicAddress: null,
-      type: typeOptions[0].value,
-    });
-
-  const [roleInfoValues, setRoleInfoValues] = useState<RoleInfoValuesType>({
-    meterIdentifier: null,
-    latitude: null,
-    longitude: null,
+  const [financeValues, setFinanceValues] = useState<FinanceValuesType>({
+    apy: null,
+    goal: null,
   });
 
   /* Contract Calls */
-  const { runContractFunction: newMember } = useWeb3Contract({
-    abi: communityAbi,
-    contractAddress: community,
-    functionName: "enterCommunity",
+  const { runContractFunction: newCrowdloan } = useWeb3Contract({
+    abi: crowdloanFactoryAbi,
+    contractAddress: contractAddresses["31337"]["crowdloanFactory"],
+    functionName: "createCampaign",
     params: {
-      _member: generalInfoValues.publicAddress,
-      _locationLat: Number(roleInfoValues.latitude),
-      _locatinoLon: Number(roleInfoValues.longitude),
-      _meterId: roleInfoValues.meterIdentifier,
-      _memberType: typeEnumToMemberType[generalInfoValues.type || "CONSUMER"],
+      _apy: Number(financeValues.apy),
+      _token: assetToAddress[generalInfoValues.asset],
+      _goal: Number(financeValues.goal),
+      _startAt: Math.floor(generalInfoValues.startDate.getTime() / 1000),
+      _endAt: Math.floor(generalInfoValues.endDate.getTime() / 1000),
     },
   });
 
@@ -67,7 +63,7 @@ export default function NewCrowdloan() {
     await tx.wait();
     setActiveStep(3);
     toast.update(toastId, {
-      render: "Member created!",
+      render: "Crowload created!",
       type: toast.TYPE.SUCCESS,
       position: "top-right",
       isLoading: false,
@@ -79,7 +75,7 @@ export default function NewCrowdloan() {
     /* eslint-disable no-console */
     console.error(error);
     toast.update(toastId, {
-      render: "Error adding new member!",
+      render: "Error creting campaign!",
       type: toast.TYPE.ERROR,
       position: "top-right",
       isLoading: false,
@@ -96,12 +92,12 @@ export default function NewCrowdloan() {
         autoClose: 5000,
         theme: "light",
       });
-      await newMember({
+      await newCrowdloan({
         onSuccess: (tx: any) => handleSuccess(id, tx),
         onError: (error) => handleError(id, error),
       });
     } else if (activeStep === 3) {
-      navigate("/members");
+      navigate("/crowdloans");
     }
   };
 
@@ -120,9 +116,7 @@ export default function NewCrowdloan() {
 
       case 2:
         return {
-          form: (
-            <RoleInfo values={roleInfoValues} onChange={setRoleInfoValues} />
-          ),
+          form: <Finance values={financeValues} onChange={setFinanceValues} />,
           buttonText: "Final Step!",
         };
 
@@ -130,7 +124,7 @@ export default function NewCrowdloan() {
         return {
           form: (
             <div className="w-100 text-center">
-              {generalInfoValues.publicAddress} was successfully added!
+              Crowdloan was successfully added!
             </div>
           ),
           buttonText: "Next",

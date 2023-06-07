@@ -14,7 +14,7 @@ const deployCrowdlendingFactory: DeployFunction = async function (hre: HardhatRu
         : VERIFICATION_BLOCK_CONFIRMATIONS
 
     const args: any[] = []
-    const crowdlendingFactory = await deploy("CrowdlendingFactory", {
+    const crowdlendingFactory = await deploy("CrowdloanFactory", {
         from: deployer,
         args: args,
         log: true,

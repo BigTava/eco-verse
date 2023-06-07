@@ -15,7 +15,8 @@ import { DefaultButton } from "components/Buttons/DefaultButton";
 import GeneralInfo, { GeneralInfoValuesType } from "./GeneralInfo";
 
 // Utils
-import { communityFactoryAbi, contractAddresses } from "utils/constants";
+import { communityFactoryAbi } from "utils/abis";
+import { contractAddresses } from "utils/addresses";
 import { isSupportedChain } from "utils/networks";
 
 // Others
