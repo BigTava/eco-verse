@@ -1,24 +1,34 @@
 // Core
 import { useNavigate } from "react-router-dom";
+import { useWeb3Contract } from "react-moralis";
+import { useUser } from "contexts/User.context";
+import { useQuery } from "@tanstack/react-query";
 
 // Components
-import Container from "components/Container";
-import CampaignContainer from "pages/ListCrowdloans/Container";
-
-const people = [
-  {
-    name: "Jane Cooper",
-    title: "Paradigm Representative",
-    role: "Admin",
-    email: "janecooper@example.com",
-    telephone: "+1-202-555-0170",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60",
-  },
-];
+import CrowdloansTable from "./Table";
+import { crowdloanFactoryAbi } from "utils/abis";
+import { contractAddresses } from "utils/addresses";
 
 export default function ListCrowdloans() {
   const navigate = useNavigate();
+
+  const { user } = useUser();
+
+  const { runContractFunction: getCrowdloansByOwner } = useWeb3Contract({
+    abi: crowdloanFactoryAbi,
+    contractAddress: contractAddresses["31337"]["crowdloanFactory"],
+    functionName: "getCrowdloansByOwner",
+    params: { _owner: user },
+  });
+
+  const { data }: any = useQuery({
+    queryKey: ["Crowdloans"],
+    queryFn: async function () {
+      const crowdloans = await getCrowdloansByOwner();
+      return crowdloans;
+    },
+  });
+
   return (
     <main className="lg:pl-72">
       <div className="sm:flex sm:items-center">
@@ -40,16 +50,13 @@ export default function ListCrowdloans() {
           </button>
         </div>
       </div>
-      <Container>
-        <ul
-          role="list"
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-        >
-          {people.map((person) => (
-            <CampaignContainer key={person.email} {...person} />
-          ))}
-        </ul>
-      </Container>
+      <div className="mt-8 flow-root">
+        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+          <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+            <CrowdloansTable data={data} />
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

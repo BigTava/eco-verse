@@ -1,5 +1,7 @@
 // Components
 import { EnvelopeIcon, PhoneIcon } from "@heroicons/react/20/solid";
+import DetailCard from "./DetailCard";
+import Description from "./Description";
 
 type CampaignContainerProps = {
   email: string;
@@ -9,29 +11,17 @@ type CampaignContainerProps = {
   role: string;
   telephone: string;
 };
-const CampaignContainer = (props: CampaignContainerProps) => {
+
+const CrowdloanCard = (props: CampaignContainerProps) => {
   return (
     <li
       key={props.email}
-      className="col-span-1 flex flex-col divide-y divide-gray-200 rounded-lg bg-white text-center shadow"
+      className="divide-y divide-gray-200 rounded-lg bg-white p-4 text-center shadow"
     >
-      <div className="flex flex-1 flex-col p-8">
-        <img
-          className="mx-auto h-32 w-32 flex-shrink-0 rounded-full"
-          src={props.imageUrl}
-          alt=""
-        />
-        <h3 className="mt-6 text-sm font-medium text-gray-900">{props.name}</h3>
-        <dl className="mt-1 flex flex-grow flex-col justify-between">
-          <dt className="sr-only">Title</dt>
-          <dd className="text-sm text-gray-500">{props.title}</dd>
-          <dt className="sr-only">Role</dt>
-          <dd className="mt-3">
-            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-              {props.role}
-            </span>
-          </dd>
-        </dl>
+      <Description title="EcoDAO" location="Porto, Porto" />
+      <div className="flex flex-row space-x-2 py-4">
+        <DetailCard label="Activation Date" value={"2022-01-01"} />
+        <DetailCard label="Expiration Date" value={"2022-01-01"} />
       </div>
       <div>
         <div className="-mt-px flex divide-x divide-gray-200">
@@ -62,4 +52,4 @@ const CampaignContainer = (props: CampaignContainerProps) => {
   );
 };
 
-export default CampaignContainer;
+export default CrowdloanCard;

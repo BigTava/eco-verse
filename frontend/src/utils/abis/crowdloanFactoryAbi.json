@@ -40,6 +40,15 @@
   },
   {
     "type": "function",
+    "name": "getAllCampaignsByOwner",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "_owner" }],
+    "outputs": [{ "type": "address[]" }]
+  },
+  {
+    "type": "function",
     "name": "owner",
     "constant": true,
     "stateMutability": "view",

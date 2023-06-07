@@ -168,4 +168,8 @@ contract Crowdloan is Ownable {
 
         emit Claim(pa);
     }
+
+    fallback() external payable {}
+
+    receive() external payable {}
 }
