@@ -4,37 +4,37 @@ const features = [
   {
     name: "Create your Energy Community",
     description:
-      "Whether it’s $1 or $1,000,000, we can put your money to work for you.",
+      "Start your journey building an Energy Community. Onboard members and together govern your decisions.",
     icon: EnergyCommunityIcon,
   },
   {
-    name: "Decentralized Governance",
+    name: "Automous Governance",
     description:
-      "Invest in different industries to find the most opportunities to win huge.",
+      "Participate in decision-making processes that can lead to significant gains to your community. Decide who gets in, how much money to raise.",
     icon: GovernanceIcon,
   },
   {
     name: "Financing",
     description:
-      "Get insider tips on big stock moves and act on them within seconds.",
+      "Take part in crowdlending campaigns, where every participant can contribute towards renewable energy projects. ",
     icon: FinancingIcon,
   },
   {
     name: "Energy Sharing",
     description:
-      "Invite new insiders to get tips faster and beat even other Pocket users.",
+      "We provide energy sharing services to communities or 3rd parth providers",
     icon: EnergySharingIcon,
   },
   {
-    name: "Encrypted and anonymized",
+    name: "Sustainability Tracking",
     description:
-      "Cutting-edge security technology that even the NSA doesn’t know about keeps you hidden.",
+      "Monitor your contributions to green energy production and CO2 emissions reduction. Understand the real impact of your investments on the environment.",
     icon: DeviceLockIcon,
   },
   {
-    name: "Portfolio tracking",
+    name: "Community Growth",
     description:
-      "Watch your investments grow exponentially, leaving other investors in the dust.",
+      "Witness your initial investment catalyzing sustainable energy development and setting a new standard for investors.",
     icon: DeviceChartIcon,
   },
 ];
