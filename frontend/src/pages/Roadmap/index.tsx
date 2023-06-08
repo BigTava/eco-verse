@@ -2,8 +2,8 @@ import React from "react";
 
 const Roadmap = () => {
   return (
-    <div className="overflow-hidden py-20 sm:py-8 lg:pb-32 xl:pb-36">
-      <section className=" py-10 sm:py-16 lg:py-24">
+    <div className="overflow-hidden py-10 sm:py-8 lg:pb-32 xl:pb-36">
+      <section className="lg:py-6">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">
@@ -37,11 +37,14 @@ const Roadmap = () => {
               </div>
               <div className="ml-6">
                 <h3 className="text-lg font-semibold text-black">
-                  Launch ECV Token
+                  Launch MVP on Testnet
                 </h3>
                 <p className="mt-4 text-base text-gray-600">
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
+                  Our primary goal is to launch a test version of our platform
+                  with key features like governance protocols, financing
+                  mechanisms, and energy trading support. Feedback from this
+                  phase will help us refine our platform before the mainnet
+                  launch.
                 </p>
               </div>
             </li>
@@ -67,11 +70,13 @@ const Roadmap = () => {
               </div>
               <div className="ml-6">
                 <h3 className="text-lg font-semibold text-black">
-                  Onboard X Communities
+                  Onboarding 1 Energy Community
                 </h3>
                 <p className="mt-4 text-base text-gray-600">
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
+                  We aim to integrate our first energy community. Their insights
+                  will aid in understanding user needs and improving our
+                  services, laying a solid foundation for future community
+                  onboarding.
                 </p>
               </div>
             </li>
@@ -95,11 +100,14 @@ const Roadmap = () => {
               </div>
               <div className="ml-6">
                 <h3 className="text-lg font-semibold text-black">
-                  Release & launch
+                  Platform Feature Expansion
                 </h3>
                 <p className="mt-4 text-base text-gray-600">
-                  Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-                  amet sint. Velit officia consequat duis enim velit mollit.
+                  We plan to further develop our platform based on user needs,
+                  potentially introducing new financial tools, governance
+                  mechanisms, or advanced AI for energy trading optimization.
+                  We&apos;ll also explore partnerships for expanding our reach
+                  and improving platform utility.
                 </p>
               </div>
             </li>

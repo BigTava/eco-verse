@@ -8,7 +8,7 @@ import Prefecth from "components/Prefetch";
 
 /* Pages */
 // Landing
-import Roadmap from "pages/Roadmap/Roadmap";
+import Roadmap from "pages/Roadmap";
 import NewCommunity from "pages/NewCommunity";
 
 // General
