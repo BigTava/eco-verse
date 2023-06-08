@@ -63,7 +63,11 @@ const DefaultLineChart = ({ title, description, height, chart }) => {
     </div>
   );
 
-  return title || description ? <Card>{renderChart}</Card> : renderChart;
+  return title || description ? (
+    <Card sx={{ "box-shadow": "none" }}>{renderChart}</Card>
+  ) : (
+    renderChart
+  );
 };
 
 DefaultLineChart.defaultProps = {
