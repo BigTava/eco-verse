@@ -1,13 +1,13 @@
 // Core
 import { useState, useEffect } from "react";
 import { BigNumber } from "ethers";
-import { DateTime } from "luxon";
 
 // Components
 import MuiTable from "components/Tables/MuiTable";
 
 // Utils
 import { Campaign, crowdloanStateToLabel } from "utils/types/crowdloans.types";
+import { BigNumberToDate } from "utils/time";
 
 // Columns
 const defaultColumns = [
@@ -108,16 +108,12 @@ export default function CrowdloansTable({ data }: CrowdloansTableProps) {
     console.log(data?._campaigns[0]);
     setRows(
       data?._crowdloans?.map((address: any, index: number) => {
-        const startAt = Number(data._campaigns[index].startAt as BigNumber);
-        const endAt = Number(data._campaigns[index].endAt as BigNumber);
+        const startAt = data._campaigns[index].startAt;
+        const endAt = data._campaigns[index].endAt;
         return {
           address: address,
-          activationDate: DateTime.fromJSDate(new Date(startAt)).toFormat(
-            "yyyy-MM-dd"
-          ),
-          expirationDate: DateTime.fromJSDate(new Date(endAt)).toFormat(
-            "yyyy-MM-dd"
-          ),
+          activationDate: BigNumberToDate(startAt).toString(),
+          expirationDate: BigNumberToDate(endAt).toString(),
           asset: "ECO Mock",
           apy: (data._campaigns[index].apy as BigNumber).toString(),
           goal: (data._campaigns[index].goal as BigNumber).toString(),

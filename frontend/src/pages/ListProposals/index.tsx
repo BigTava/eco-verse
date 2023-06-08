@@ -41,7 +41,7 @@ export default function ListProposals() {
 
   return (
     <main className="lg:pl-72">
-      <div className=" flex h-[calc(100%-64px)] justify-start gap-[100px]">
+      <div className=" flex h-[calc(100%-64px)] justify-start gap-[50px]">
         {/* focus on this div for responsive time */}
         <div>
           <div className="card flex w-[280px] flex-col gap-[6px] p-3">
@@ -100,7 +100,7 @@ export default function ListProposals() {
 
         <div>
           {!showCard ? (
-            <div className="grid w-[904px] grid-cols-3 gap-[10px]">
+            <div className="grid grid-cols-3 gap-[30px]">
               {proposalsDiplayed.map((proposal: Proposal, index) => {
                 return (
                   <ProposalCardPreview

@@ -24,11 +24,11 @@ export default function ListCrowdloans() {
     queryKey: ["Crowdloans"],
     queryFn: async function () {
       const crowdloans = await getCrowdloansByOwner();
-      console.log(crowdloans);
+
       return crowdloans;
     },
   });
-  console.log(data);
+
   return (
     <main className="lg:pl-72">
       <div className="sm:flex sm:items-center">

@@ -7,15 +7,15 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const ListCampaignsNav = () => {
+export default function InvestNav() {
   return (
     <div className="mb-8 border-b border-gray-200">
       <div className="sm:flex sm:items-baseline">
-        <h3 className="text-base font-semibold leading-6 text-gray-900">
-          Crowdlending Campaigns
+        <h3 className="text-base font-semibold leading-6 text-gray-900 ">
+          Crowdloans
         </h3>
-        <div className="mt-4 sm:ml-10 sm:mt-0">
-          <nav className="-mb-px flex space-x-8">
+        <div className="mt-4 sm:ml-auto sm:mt-0">
+          <nav className="-mb-px flex justify-center space-x-8">
             {tabs.map((tab) => (
               <a
                 key={tab.name}
@@ -36,6 +36,4 @@ const ListCampaignsNav = () => {
       </div>
     </div>
   );
-};
-
-export default ListCampaignsNav;
+}

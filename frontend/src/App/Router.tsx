@@ -19,6 +19,7 @@ import ListMembers from "pages/ListMembers";
 import NewMember from "pages/NewMember";
 
 // Financing
+import Invest from "pages/Invest";
 import ListCrowdloans from "pages/ListCrowdloans";
 import NewCrowdloan from "pages/NewCrowdloan";
 
@@ -31,7 +32,7 @@ const Router = () => {
       <Route path="/" element={<Outlet />}>
         <Route index element={<Landing />} />
         <Route path="create-community" element={<NewCommunity />} />
-        <Route path="campaigns" element={<ListCrowdloans />} />
+        <Route path="open-crowdloans" element={<Invest />} />
         <Route path="roadmap" element={<Roadmap />} />
         <Route element={<ProtectedRoute />}>
           <Route element={<Prefecth />}>

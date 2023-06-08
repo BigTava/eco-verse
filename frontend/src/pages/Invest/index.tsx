@@ -1,41 +1,52 @@
-const tabs = [
-  { name: "Open", href: "#", current: true },
-  { name: "Closed", href: "#", current: false },
-];
+// Core
+import { useWeb3Contract } from "react-moralis";
+import { crowdloanFactoryAbi } from "utils/abis";
+import { contractAddresses } from "utils/addresses";
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+// Components
+import Container from "components/Container";
+import Nav from "./Nav";
+import Card from "./Card";
 
-const ListCampaignsNav = () => {
+export default function Invest() {
+  const { runContractFunction: getCrowdloansByOwner } = useWeb3Contract({
+    abi: crowdloanFactoryAbi,
+    contractAddress: contractAddresses["31337"]["crowdloanFactory"],
+    functionName: "getAllCrowdloans",
+    params: {},
+  });
+
+  const { data, isSuccess }: any = useQuery({
+    queryKey: ["Crowdloans"],
+    queryFn: async function () {
+      const crowdloans = await getCrowdloansByOwner();
+      return crowdloans ?? {};
+    },
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: true,
+  });
+
+  useEffect(() => {}, [isSuccess]);
+
   return (
-    <div className="mb-8 border-b border-gray-200">
-      <div className="sm:flex sm:items-baseline">
-        <h3 className="text-base font-semibold leading-6 text-gray-900">
-          Crowdlending Campaigns
-        </h3>
-        <div className="mt-4 sm:ml-10 sm:mt-0">
-          <nav className="-mb-px flex space-x-8">
-            {tabs.map((tab) => (
-              <a
-                key={tab.name}
-                href={tab.href}
-                className={classNames(
-                  tab.current
-                    ? "border-indigo-500 text-indigo-600"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
-                  "whitespace-nowrap border-b-2 px-1 pb-4 text-sm font-medium"
-                )}
-                aria-current={tab.current ? "page" : undefined}
-              >
-                {tab.name}
-              </a>
+    <div className="overflow-hidden py-10 sm:py-10 lg:pb-32 xl:pb-36">
+      <Container>
+        <Nav />
+        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+          {isSuccess &&
+            data?._crowdloans?.map((crowdloan, index) => (
+              <Card
+                key={index}
+                address={crowdloan}
+                activationDate={data._campaigns[index].startAt}
+                expirationDate={data._campaigns[index].endAt}
+                title={"EcoDAO"}
+              />
             ))}
-          </nav>
         </div>
-      </div>
+      </Container>
     </div>
   );
-};
-
-export default ListCampaignsNav;
+}

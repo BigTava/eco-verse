@@ -10,7 +10,7 @@ const Description = (props: DescriptionProps) => {
   return (
     <div>
       <div className="mb-4 flex flex-col items-center">
-        <h3 className="text-center text-3xl font-bold">{props.title}</h3>
+        <h3 className="text-center text-2xl font-bold">{props.title}</h3>
         <p className="text-center font-medium text-gray-700">
           Renewable Energy Community
         </p>

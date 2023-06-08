@@ -12,7 +12,14 @@ interface ICrowdloanFactory {
         uint256 _endAt
     ) external returns (address _crowdloanAddress);
 
-    function getAllCrowdloans() external view returns (address[] memory);
+    function getAllCrowdloans()
+        external
+        view
+        returns (
+            address[] memory _crowdloans,
+            CrowdloanLib.CrowdloanState[] memory _states,
+            CrowdloanLib.Campaign[] memory _campaigns
+        );
 
     function getAllCampaignsByOwner(
         address _owner

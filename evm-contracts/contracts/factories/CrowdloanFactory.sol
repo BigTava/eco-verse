@@ -47,9 +47,24 @@ contract CrowdloanFactory is Ownable {
         emit NewCrowdloan(_crowdloanAddress);
     }
 
-    /* Getter Functions */
-    function getAllCrowdloans() public view returns (address[] memory) {
-        return s_crowdloans_array;
+    /* Getter Functions (TO DO: indexer) */
+    function getAllCrowdloans()
+        public
+        view
+        returns (
+            address[] memory _crowdloans,
+            CrowdloanLib.CrowdloanState[] memory _states,
+            CrowdloanLib.Campaign[] memory _campaigns
+        )
+    {
+        _crowdloans = s_crowdloans_array;
+        _states = new CrowdloanLib.CrowdloanState[](_crowdloans.length);
+        _campaigns = new CrowdloanLib.Campaign[](_crowdloans.length);
+
+        for (uint i = 0; i < _crowdloans.length; i++) {
+            _states[i] = ICrowdloan(_crowdloans[i]).getCrowdloanState();
+            _campaigns[i] = ICrowdloan(_crowdloans[i]).getCampaign();
+        }
     }
 
     function getAllCampaignsByOwner(

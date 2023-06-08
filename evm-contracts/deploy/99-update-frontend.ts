@@ -47,6 +47,11 @@ const updateUI: DeployFunction = async function (hre: HardhatRuntimeEnvironment)
                 communityFactory: communityFactory.address,
             }
         }
+
+        if (chainId === "31337") {
+            const erc20Mock = await ethers.getContract("ERC20Mock")
+            contractAddresses[chainId]["erc20Mock"] = erc20Mock.address
+        }
         fs.writeFileSync(FRONTEND_END_ADDRESSES_FILE, JSON.stringify(contractAddresses))
 
         // ABI files
