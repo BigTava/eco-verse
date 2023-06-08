@@ -5,6 +5,7 @@ import { useUser } from "contexts/User.context";
 // Components
 import { Hero } from "./Hero";
 import { Features } from "./Features";
+import { Faqs } from "components/Faqs";
 
 // Images
 const Landing = () => {
@@ -19,7 +20,8 @@ const Landing = () => {
       <Hero />
       <div className="divider" />
       <Features />
-      <div className="divider" />
+
+      <Faqs />
     </>
   );
 };
