@@ -100,12 +100,10 @@ type Rows = {
 };
 
 export default function CrowdloansTable({ data }: CrowdloansTableProps) {
-  console.log(data);
   // Rows
   const [rows, setRows] = useState<Rows[]>([]);
 
   useEffect(() => {
-    console.log(data?._campaigns[0]);
     setRows(
       data?._crowdloans?.map((address: any, index: number) => {
         const startAt = data._campaigns[index].startAt;

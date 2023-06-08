@@ -3,6 +3,8 @@ import { useWeb3Contract } from "react-moralis";
 import { useState, ReactText } from "react";
 import { toast } from "react-toastify";
 import { ContractTransaction, BigNumber } from "ethers";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useUser } from "contexts/User.context";
 
 // Components
 import DetailCard from "./DetailCard";
@@ -23,8 +25,12 @@ type CrowdloanCardProps = {
 };
 
 const CrowdloanCard = (props: CrowdloanCardProps) => {
+  const queryClient = useQueryClient();
+
   const [amount, setAmount] = useState<number | null>(null);
   const [allowanceIncreased, setAllowanceIncreased] = useState<boolean>(false);
+
+  const { user } = useUser();
 
   const { runContractFunction: increaseAllowance } = useWeb3Contract({
     abi: erc20Abi,
@@ -42,6 +48,24 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
     functionName: "pledge",
     params: {
       _amount: amount,
+    },
+  });
+
+  const { runContractFunction: getPledgedAmount } = useWeb3Contract({
+    abi: crowdloanAbi,
+    contractAddress: props.address,
+    functionName: "getPledgedAmount",
+    params: {
+      _address: user,
+    },
+  });
+
+  const { data: pledgedAmount, refetch: refetchPledgetAmount } = useQuery({
+    queryKey: ["pledgedAmount", { crowdloan: props.address }],
+    queryFn: async function () {
+      const pledgedAmount = await getPledgedAmount();
+      console.log(pledgedAmount);
+      return pledgedAmount;
     },
   });
 
@@ -72,7 +96,14 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
       isLoading: false,
       autoClose: 1000,
     });
-    !allowanceIncreased && setAllowanceIncreased(true);
+    if (!allowanceIncreased) {
+      setAllowanceIncreased(true);
+    } else {
+      queryClient.invalidateQueries({
+        queryKey: ["pledgedAmount", { crowdloan: props.address }],
+      });
+      refetchPledgetAmount();
+    }
   };
 
   const handleError = (toastId: ReactText, error: any) => {
@@ -115,10 +146,16 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
           defaultValue={""}
           required
         />
+        <div className="col-span-1 my-auto text-base font-medium text-gray-700">
+          Currently Pledged
+        </div>
+        <h4 className="col-span-1 my-auto ml-auto text-base font-medium text-gray-700">
+          {`${pledgedAmount ?? "0"} ECO`}
+        </h4>
         <DefaultButton
           onClick={() => {}}
           color="gray"
-          className="w-3/4 "
+          className="col-span-1 w-3/4"
           disabled={false}
           variant="outline"
         >
@@ -127,7 +164,7 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
         <DefaultButton
           onClick={handleNext}
           color="green"
-          className="ml-auto w-3/4"
+          className="col-span-1 ml-auto w-3/4"
           disabled={!canSave}
           variant="solid"
         >

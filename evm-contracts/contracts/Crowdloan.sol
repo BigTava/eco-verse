@@ -29,7 +29,7 @@ contract Crowdloan is Ownable {
     CrowdloanLib.Campaign private s_campaign;
     CrowdloanLib.CrowdloanState private s_state;
 
-    mapping(address => uint) public pledgedAmount;
+    mapping(address => uint) private pledgedAmount;
 
     //----------------- Events ----------------------------
     event Launch(address indexed creator, uint32 apy, uint goal, uint256 startAt, uint256 endAt);
@@ -164,6 +164,10 @@ contract Crowdloan is Ownable {
 
     function getCrowdloanState() public view returns (CrowdloanLib.CrowdloanState) {
         return s_state;
+    }
+
+    function getPledgedAmount(address _address) public view returns (uint256) {
+        return pledgedAmount[_address];
     }
 
     fallback() external payable {}
