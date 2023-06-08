@@ -13,6 +13,7 @@ import NavLinks from "components/Header/NavLinks";
 import AccountModal from "components/Modals/AccountModal";
 import { DefaultButton } from "components/Buttons/DefaultButton";
 import HeaderContainer from "./Container";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 export function Header() {
   const navigate = useNavigate();
@@ -93,15 +94,15 @@ export function Header() {
               >
                 {!isLoggedIn ? "Login" : "My Account"}
               </DefaultButton>
-              {isLoggedIn && !community && (
+              {isLoggedIn && (
                 <DefaultButton
-                  variant="outline"
-                  color="gray"
+                  variant="solid"
+                  color="green"
                   className="lg:block"
                   onClick={() => navigate("/dashboard")}
                   disabled={disabled}
                 >
-                  App
+                  <UserCircleIcon className="text-grey-500 h-6 w-full" />
                 </DefaultButton>
               )}
             </div>

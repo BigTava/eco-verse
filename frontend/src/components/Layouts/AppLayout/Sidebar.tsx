@@ -15,7 +15,7 @@ export default function Sidebar() {
   const { pathname } = location;
 
   return (
-    <div className="lg:fixed lg:top-28 lg:bottom-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+    <div className="z-0 lg:fixed lg:top-28 lg:bottom-0 lg:flex lg:w-72 lg:flex-col">
       <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4">
         <nav className="flex flex-1 flex-col">
           <ul role="list" className="flex flex-1 flex-col gap-y-7">

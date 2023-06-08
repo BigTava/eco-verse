@@ -50,22 +50,24 @@ const DefaultModal: React.FC<ModalProps> = (props: ModalProps) => {
         </button>
         <div className="sm:py-6">{props.children}</div>
 
-        <div className="mt-4 flex items-center justify-end space-x-3">
-          <button
-            type="button"
-            className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            onClick={props.onClickClose}
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
-            className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            onClick={props.onClickConfirm}
-          >
-            {props.confirmButtonText ?? "Confirm"}
-          </button>
-        </div>
+        {props.onClickConfirm && (
+          <div className="mt-4 flex items-center justify-end space-x-3">
+            <button
+              type="button"
+              className="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              onClick={props.onClickClose}
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              onClick={props.onClickConfirm}
+            >
+              {props.confirmButtonText ?? "Confirm"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

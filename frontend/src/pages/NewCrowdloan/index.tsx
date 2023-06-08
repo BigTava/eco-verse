@@ -17,7 +17,7 @@ import Finance, { FinanceValuesType } from "./Finance";
 // Utils
 import { crowdloanFactoryAbi } from "utils/abis";
 import { contractAddresses } from "utils/addresses";
-import { assets, assetToAddress } from "utils/assets";
+import { assets, getAddressFromAsset } from "utils/assets";
 
 export default function NewCrowdloan() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ export default function NewCrowdloan() {
     functionName: "createCrowdloan",
     params: {
       _apy: Number(financeValues.apy),
-      _token: assetToAddress[generalInfoValues.asset],
+      _token: getAddressFromAsset(generalInfoValues.asset, "31337"),
       _goal: Number(financeValues.goal),
       _startAt: Math.floor(generalInfoValues.startDate.getTime() / 1000),
       _endAt: Math.floor(generalInfoValues.endDate.getTime() / 1000),

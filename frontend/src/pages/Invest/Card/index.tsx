@@ -1,6 +1,5 @@
 // Core
 import { useWeb3Contract } from "react-moralis";
-import { useUser } from "contexts/User.context";
 import { useState, ReactText } from "react";
 import { toast } from "react-toastify";
 import { ContractTransaction, BigNumber } from "ethers";
@@ -25,14 +24,14 @@ type CrowdloanCardProps = {
 
 const CrowdloanCard = (props: CrowdloanCardProps) => {
   const [amount, setAmount] = useState<number | null>(null);
+  const [allowanceIncreased, setAllowanceIncreased] = useState<boolean>(false);
 
-  const { user } = useUser();
   const { runContractFunction: increaseAllowance } = useWeb3Contract({
     abi: erc20Abi,
     contractAddress: contractAddresses["31337"]["erc20Mock"],
     functionName: "increaseAllowance",
     params: {
-      spender: user,
+      spender: props.address,
       addedValue: amount,
     },
   });
@@ -48,32 +47,32 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
 
   const canSave = () => amount !== null && amount > 0;
 
-  const handleLend = async () => {
+  const handleNext = async () => {
     const id = toast.loading("Please wait...", {
       position: "top-right",
       autoClose: 5000,
       theme: "light",
     });
-    const canProceed = await increaseAllowance({
-      onSuccess: async (tx: any) => await tx.wait(),
-      onError: (error) => handleError(id, error),
-    });
-    canProceed &&
-      (await lend({
-        onSuccess: (tx: any) => handleSuccess(id, tx),
-        onError: (error) => handleError(id, error),
-      }));
+    !allowanceIncreased
+      ? await increaseAllowance({
+          onSuccess: async (tx: any) => handleSuccess(id, tx),
+          onError: (error) => handleError(id, error),
+        })
+      : await lend({
+          onSuccess: (tx: any) => handleSuccess(id, tx),
+          onError: (error) => handleError(id, error),
+        });
   };
   const handleSuccess = async (toastId: ReactText, tx: ContractTransaction) => {
     await tx.wait();
     toast.update(toastId, {
-      render: "Loan successful!",
+      render: allowanceIncreased ? "Loan successful!" : "Permission granted!",
       type: toast.TYPE.SUCCESS,
       position: "top-right",
       isLoading: false,
       autoClose: 1000,
     });
-    return true;
+    !allowanceIncreased && setAllowanceIncreased(true);
   };
 
   const handleError = (toastId: ReactText, error: any) => {
@@ -86,7 +85,6 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
       isLoading: false,
       autoClose: 1000,
     });
-    return false;
   };
 
   return (
@@ -127,13 +125,13 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
           Withdraw
         </DefaultButton>
         <DefaultButton
-          onClick={handleLend}
+          onClick={handleNext}
           color="green"
           className="ml-auto w-3/4"
           disabled={!canSave}
           variant="solid"
         >
-          Lend
+          {allowanceIncreased ? "Lend" : "Allow"}
         </DefaultButton>
       </div>
     </div>

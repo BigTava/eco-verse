@@ -13,7 +13,7 @@ import { isZeroAddress } from "utils/ethers";
 import AppLayout from "components/Layouts/AppLayout";
 
 const Prefecth = () => {
-  const { setCommunity } = useUser();
+  const { setCommunity, community } = useUser();
 
   const { runContractFunction: getCommunity } = useWeb3Contract({
     abi: communityFactoryAbi,
@@ -24,7 +24,7 @@ const Prefecth = () => {
     params: {},
   });
 
-  const community = useQuery({
+  const { data } = useQuery({
     queryKey: ["Community"],
     queryFn: async function () {
       const result = await getCommunity();
@@ -38,7 +38,7 @@ const Prefecth = () => {
     },
   });
 
-  return community && !isZeroAddress(community.data!) ? (
+  return community || !isZeroAddress(data!) ? (
     <AppLayout>
       <Outlet />
     </AppLayout>
