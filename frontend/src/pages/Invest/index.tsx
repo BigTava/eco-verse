@@ -1,5 +1,5 @@
 // Core
-import { useWeb3Contract } from "react-moralis";
+import { useWeb3Contract, useMoralis } from "react-moralis";
 import { crowdloanFactoryAbi } from "utils/abis";
 import { contractAddresses } from "utils/addresses";
 import { useQuery } from "@tanstack/react-query";
@@ -10,9 +10,15 @@ import Nav from "./Nav";
 import ListCampaigns from "pages/ListCampaigns";
 
 export default function Invest() {
+  const { chainId: chainIdHex } = useMoralis();
+
+  const chainId: string = chainIdHex
+    ? parseInt(chainIdHex!).toString()
+    : "11155111";
+
   const { runContractFunction: getCrowdloansByOwner } = useWeb3Contract({
     abi: crowdloanFactoryAbi,
-    contractAddress: contractAddresses["31337"]["crowdloanFactory"],
+    contractAddress: contractAddresses[chainId]["crowdloanFactory"],
     functionName: "getAllCrowdloans",
     params: {},
   });

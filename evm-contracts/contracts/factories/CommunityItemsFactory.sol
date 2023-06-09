@@ -2,8 +2,8 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "hardhat/console.sol";
+
 import "../CommunityItems.sol";
 
 /** @title Energy Community Items Factory Contract
@@ -26,6 +26,7 @@ contract CommunityItemsFactory {
 
     function createCommunityItems() public returns (address communityItemsAddress) {
         CommunityItems newCommunityItems = new CommunityItems("", "", "");
+        newCommunityItems.transferOwnership(msg.sender);
 
         communityItemsAddress = address(newCommunityItems);
         s_allCommunityItems.push(communityItemsAddress);

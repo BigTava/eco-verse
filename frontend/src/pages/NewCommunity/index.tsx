@@ -3,7 +3,7 @@ import { useState, ReactText } from "react";
 import { useUser } from "contexts/User.context";
 import { toast } from "react-toastify";
 import { useWeb3 } from "contexts/Web3.context";
-import { useWeb3Contract } from "react-moralis";
+import { useWeb3Contract, useMoralis } from "react-moralis";
 import { ContractTransaction } from "ethers";
 import { useNavigate } from "react-router-dom";
 
@@ -27,6 +27,11 @@ export default function CreateCommunity() {
 
   const { user, setCommunity } = useUser();
   const { web3 } = useWeb3();
+  const { chainId: chainIdHex } = useMoralis();
+
+  const chainId: string = chainIdHex
+    ? parseInt(chainIdHex!).toString()
+    : "11155111";
 
   const [activeStep, setActiveStep] = useState(1);
   const [generalInfoValues, setGeneralInfoValues] =
@@ -35,11 +40,11 @@ export default function CreateCommunity() {
       latitude: null,
       longitude: null,
     });
-
+  console.log(contractAddresses[chainId]["communityFactory"]);
   /* Contract Calls */
   const { runContractFunction: createCommunity } = useWeb3Contract({
     abi: communityFactoryAbi,
-    contractAddress: contractAddresses["31337"][
+    contractAddress: contractAddresses[chainId][
       "communityFactory"
     ] as `0x${string}`,
     functionName: "createCommunity",

@@ -2,6 +2,7 @@ import "@typechain/hardhat"
 import "@nomiclabs/hardhat-waffle"
 import "@nomiclabs/hardhat-etherscan"
 import "@nomiclabs/hardhat-ethers"
+import "hardhat-contract-sizer"
 import "hardhat-gas-reporter"
 import "dotenv/config"
 import "solidity-coverage"
@@ -107,9 +108,13 @@ const config: HardhatUserConfig = {
         settings: {
             optimizer: {
                 enabled: true,
-                runs: 200,
+                runs: 10,
             },
         },
+    },
+    contractSizer: {
+        runOnCompile: true,
+        only: [""],
     },
     mocha: {
         timeout: 200000, // 200 seconds max for running tests

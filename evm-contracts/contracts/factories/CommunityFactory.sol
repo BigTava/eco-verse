@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "hardhat/console.sol";
-
 import "./CommunityItemsFactory.sol";
 
 import "../Community.sol";
@@ -40,12 +37,23 @@ contract CommunityFactory {
         int256 _epicenterLon,
         int256 _epicenterLat
     ) public {
-        Community newCommunity = new Community(_name, _epicenterLon, _epicenterLat, msg.sender);
+        address communityItemsAddress = s_communityItemsFactory.createCommunityItems();
+        ICommunityItems communityItems = ICommunityItems(communityItemsAddress);
+
+        Community newCommunity = new Community(
+            _name,
+            _epicenterLon,
+            _epicenterLat,
+            msg.sender,
+            communityItemsAddress
+        );
         address communityAddress = address(newCommunity);
 
-        address communityItemsAddress = s_communityItemsFactory.createCommunityItems();
-
         s_communities[msg.sender] = communityAddress;
+
+        communityItems.mintCreatorMembership(msg.sender);
+        ICommunityItems(communityItemsAddress).transferOwnership(communityAddress);
+
         emit NewCommunity(communityAddress, communityItemsAddress, _epicenterLon, _epicenterLat);
     }
 

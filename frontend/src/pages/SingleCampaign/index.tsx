@@ -1,5 +1,5 @@
 // Core
-import { useWeb3Contract } from "react-moralis";
+import { useWeb3Contract, useMoralis } from "react-moralis";
 import { useState, ReactText } from "react";
 import { toast } from "react-toastify";
 import { ContractTransaction, BigNumber } from "ethers";
@@ -31,10 +31,15 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
   const [allowanceIncreased, setAllowanceIncreased] = useState<boolean>(false);
 
   const { user } = useUser();
+  const { chainId: chainIdHex } = useMoralis();
+
+  const chainId: string = chainIdHex
+    ? parseInt(chainIdHex!).toString()
+    : "11155111";
 
   const { runContractFunction: increaseAllowance } = useWeb3Contract({
     abi: erc20Abi,
-    contractAddress: contractAddresses["31337"]["erc20Mock"],
+    contractAddress: contractAddresses[chainId]["weth"],
     functionName: "increaseAllowance",
     params: {
       spender: props.address,
@@ -42,6 +47,7 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
     },
   });
 
+  console.log(props.address);
   const { runContractFunction: lend } = useWeb3Contract({
     abi: crowdloanAbi,
     contractAddress: props.address,
@@ -64,7 +70,6 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
     queryKey: ["pledgedAmount", { crowdloan: props.address }],
     queryFn: async function () {
       const pledgedAmount = await getPledgedAmount();
-      console.log(pledgedAmount);
       return pledgedAmount;
     },
   });
@@ -150,7 +155,7 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
           Currently Pledged
         </div>
         <h4 className="col-span-1 my-auto ml-auto text-base font-medium text-gray-700">
-          {`${pledgedAmount ?? "0"} ECO`}
+          {`${pledgedAmount ?? "0"} WETH`}
         </h4>
         <DefaultButton
           onClick={() => {}}

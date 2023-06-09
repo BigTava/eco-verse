@@ -1,16 +1,14 @@
 // Core
 import { useState, ReactText } from "react";
 import { useNavigate } from "react-router-dom";
-import { useWeb3Contract } from "react-moralis";
+import { useWeb3Contract, useMoralis } from "react-moralis";
 import { toast } from "react-toastify";
 import { ContractTransaction } from "ethers";
 
 // Components
 import Navigation from "components/Navigation";
-
 import { FormLayout } from "components/Layouts/FormLayout";
 import { DefaultButton } from "components/Buttons/DefaultButton";
-
 import GeneralInfo, { GeneralValuesType } from "./General";
 import Finance, { FinanceValuesType } from "./Finance";
 
@@ -22,6 +20,11 @@ import { assets, getAddressFromAsset } from "utils/assets";
 export default function NewCrowdloan() {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(1);
+  const { chainId: chainIdHex } = useMoralis();
+
+  const chainId: string = chainIdHex
+    ? parseInt(chainIdHex!).toString()
+    : "11155111";
 
   const [generalInfoValues, setGeneralInfoValues] = useState<GeneralValuesType>(
     {
@@ -36,14 +39,16 @@ export default function NewCrowdloan() {
     goal: null,
   });
 
+  console.log(getAddressFromAsset(generalInfoValues.asset, chainId));
+  console.log(contractAddresses[chainId]["crowdloanFactory"]);
   /* Contract Calls */
   const { runContractFunction: newCrowdloan } = useWeb3Contract({
     abi: crowdloanFactoryAbi,
-    contractAddress: contractAddresses["31337"]["crowdloanFactory"],
+    contractAddress: contractAddresses[chainId]["crowdloanFactory"],
     functionName: "createCrowdloan",
     params: {
       _apy: Number(financeValues.apy),
-      _token: getAddressFromAsset(generalInfoValues.asset, "31337"),
+      _token: getAddressFromAsset(generalInfoValues.asset, chainId),
       _goal: Number(financeValues.goal),
       _startAt: Math.floor(generalInfoValues.startDate.getTime() / 1000),
       _endAt: Math.floor(generalInfoValues.endDate.getTime() / 1000),

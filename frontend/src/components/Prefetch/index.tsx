@@ -1,6 +1,6 @@
 // Core
 import { Outlet, Navigate } from "react-router-dom";
-import { useWeb3Contract } from "react-moralis";
+import { useWeb3Contract, useMoralis } from "react-moralis";
 import { useUser } from "contexts/User.context";
 import { useQuery } from "@tanstack/react-query";
 
@@ -14,10 +14,13 @@ import AppLayout from "components/Layouts/AppLayout";
 
 const Prefecth = () => {
   const { setCommunity, community } = useUser();
+  const { chainId: chainIdHex } = useMoralis();
+
+  const chainId: string = parseInt(chainIdHex!).toString() ?? "11155111";
 
   const { runContractFunction: getCommunity } = useWeb3Contract({
     abi: communityFactoryAbi,
-    contractAddress: contractAddresses["31337"][
+    contractAddress: contractAddresses[chainId][
       "communityFactory"
     ] as `0x${string}`,
     functionName: "getCommunity",
@@ -38,7 +41,7 @@ const Prefecth = () => {
     },
   });
 
-  return community || !isZeroAddress(data!) ? (
+  return !!community || !isZeroAddress(data!) ? (
     <AppLayout>
       <Outlet />
     </AppLayout>

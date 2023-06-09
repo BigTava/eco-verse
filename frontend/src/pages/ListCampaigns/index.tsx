@@ -1,5 +1,5 @@
 // Components
-import Card from "./Card";
+import Card from "../SingleCampaign";
 
 // Utils
 import { Campaign } from "utils/types/crowdloans.types";

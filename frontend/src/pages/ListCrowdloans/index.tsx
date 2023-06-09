@@ -1,6 +1,6 @@
 // Core
 import { useNavigate } from "react-router-dom";
-import { useWeb3Contract } from "react-moralis";
+import { useWeb3Contract, useMoralis } from "react-moralis";
 import { useUser } from "contexts/User.context";
 import { useQuery } from "@tanstack/react-query";
 
@@ -11,11 +11,16 @@ import { contractAddresses } from "utils/addresses";
 
 export default function ListCrowdloans() {
   const navigate = useNavigate();
-
+  const { chainId: chainIdHex } = useMoralis();
   const { user } = useUser();
+
+  const chainId: string = chainIdHex
+    ? parseInt(chainIdHex!).toString()
+    : "11155111";
+
   const { runContractFunction: getCrowdloansByOwner } = useWeb3Contract({
     abi: crowdloanFactoryAbi,
-    contractAddress: contractAddresses["31337"]["crowdloanFactory"],
+    contractAddress: contractAddresses[chainId]["crowdloanFactory"],
     functionName: "getAllCampaignsByOwner",
     params: { _owner: user },
   });

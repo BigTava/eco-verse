@@ -66,15 +66,17 @@ contract Community is Ownable {
     //----------------- Modifiers -------------------------
 
     //----------------- Functions -------------------------
-    constructor(string memory _name, int256 _epicenterLat, int256 _epicenterLon, address _creator) {
+    constructor(
+        string memory _name,
+        int256 _epicenterLat,
+        int256 _epicenterLon,
+        address _creator,
+        address _communityItems
+    ) {
         i_name = _name;
         i_epicenter = Location(_epicenterLat, _epicenterLon);
 
-        // CommunityItems
-        CommunityItems communityItems = new CommunityItems("", "", "");
-        i_communityItems = ICommunityItems(address(communityItems));
-
-        i_communityItems.mintCreatorMembership(_creator);
+        i_communityItems = ICommunityItems(_communityItems);
 
         transferOwnership(_creator);
     }

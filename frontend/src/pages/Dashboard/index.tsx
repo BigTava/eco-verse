@@ -23,8 +23,8 @@ const defaultStats = [
     value: "0 $",
   },
   {
-    name: "Internal Energy Traded",
-    value: "0 kWh",
+    name: "CO2 Emissions Avoided",
+    value: "0 tCO2",
   },
 ];
 
@@ -109,7 +109,7 @@ const Dashboard = () => {
           </div>
           <div>
             <DefaultLineChart
-              title="Volume of Energy traded internally"
+              title="Volume of energy raded locally"
               description="This is a line chart showing the evolution of energy traded among community members."
               chart={chartData}
             />

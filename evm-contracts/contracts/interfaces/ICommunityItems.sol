@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-interface ICommunityItems {
+interface IOwnable {
+    function transferOwnership(address newOwner) external;
+}
+
+interface ICommunityItems is IOwnable {
     function mintCreatorMembership(address _creator) external;
 
     function mintConsumerMembership(address _member) external;
