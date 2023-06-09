@@ -47,7 +47,6 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
     },
   });
 
-  console.log(props.address);
   const { runContractFunction: lend } = useWeb3Contract({
     abi: crowdloanAbi,
     contractAddress: props.address,

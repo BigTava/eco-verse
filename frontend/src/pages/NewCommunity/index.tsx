@@ -40,7 +40,7 @@ export default function CreateCommunity() {
       latitude: null,
       longitude: null,
     });
-  console.log(contractAddresses[chainId]["communityFactory"]);
+
   /* Contract Calls */
   const { runContractFunction: createCommunity } = useWeb3Contract({
     abi: communityFactoryAbi,

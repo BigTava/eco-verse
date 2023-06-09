@@ -25,7 +25,7 @@ export default function NewMember() {
   const [activeStep, setActiveStep] = useState(1);
 
   const { community } = useUser();
-  console.log(community);
+
   const [generalInfoValues, setGeneralInfoValues] =
     useState<GeneralInfoValuesType>({
       publicAddress: null,

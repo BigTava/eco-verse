@@ -39,8 +39,6 @@ export default function NewCrowdloan() {
     goal: null,
   });
 
-  console.log(getAddressFromAsset(generalInfoValues.asset, chainId));
-  console.log(contractAddresses[chainId]["crowdloanFactory"]);
   /* Contract Calls */
   const { runContractFunction: newCrowdloan } = useWeb3Contract({
     abi: crowdloanFactoryAbi,
