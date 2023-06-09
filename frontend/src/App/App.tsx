@@ -9,6 +9,7 @@ import { Header } from "../components/Header";
 // Others
 import Providers from "./Providers";
 import Router from "./Router";
+import { Footer } from "components/Footer";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         />
         <Header />
         <Router />
+        <Footer />
       </Providers>
     </BrowserRouter>
   );

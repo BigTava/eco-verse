@@ -84,7 +84,7 @@ const Roadmap = () => {
             <li className="relative flex items-start">
               <div className="relative flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-white shadow">
                 <svg
-                  className="h-10 w-10 text-fuchsia-600"
+                  className="h-10 w-10 font-semibold text-green-300"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
