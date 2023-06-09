@@ -109,7 +109,7 @@ const Dashboard = () => {
           </div>
           <div>
             <DefaultLineChart
-              title="Volume of energy raded locally"
+              title="Volume of energy traded locally"
               description="This is a line chart showing the evolution of energy traded among community members."
               chart={chartData}
             />
