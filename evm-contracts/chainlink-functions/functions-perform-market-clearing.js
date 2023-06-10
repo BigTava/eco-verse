@@ -1,6 +1,6 @@
 const prompt = args[0]
 const today = new Date()
-
+console.log("HEY")
 if (!secrets.inescKey) {
     throw Error("Need to set ECOVERSE_KEY environment variable")
 }

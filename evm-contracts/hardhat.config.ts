@@ -118,8 +118,8 @@ const config: HardhatUserConfig = {
         },
     },
     contractSizer: {
-        runOnCompile: true,
-        only: [""],
+        runOnCompile: false,
+        only: ["FunctionsConsumer", "AutomatedFunctionsConsumer", "FunctionsBillingRegistry"],
     },
     mocha: {
         timeout: 200000, // 200 seconds max for running tests

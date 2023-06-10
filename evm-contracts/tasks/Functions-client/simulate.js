@@ -7,6 +7,7 @@ const {
 const { networks, SHARED_DON_PUBLIC_KEY } = require("../../networks")
 const path = require("path")
 const process = require("process")
+const { networkConfig } = require("../../helper-hardhat-config")
 
 task(
     "functions-simulate",
@@ -19,10 +20,12 @@ task(
     .addOptionalParam(
         "configpath",
         "Path to Functions request config file",
-        `${__dirname}/../../Functions-request-config.js`,
+        `${__dirname}/../../chainlink-functions/functions-request-config.js`,
         types.string
     )
     .setAction(async (taskArgs, hre) => {
+        const { network } = hre
+        const chainId = network.config.chainId
         // Simulation can only be conducted on a local fork of the blockchain
         if (network.name !== "hardhat") {
             throw Error('Simulated requests can only be conducted using --network "hardhat"')
@@ -40,10 +43,6 @@ task(
 
         // Deploy a mock oracle & registry contract to simulate a fulfillment
         const { oracle, registry, linkToken } = await deployMockOracle()
-        // Deploy the client contract
-        const clientFactory = await ethers.getContractFactory("EnergyMarket")
-        const client = await clientFactory.deploy(oracle.address)
-        await client.deployTransaction.wait(1)
 
         const accounts = await ethers.getSigners()
         const deployer = accounts[0]
@@ -61,6 +60,19 @@ task(
             juelsAmount,
             ethers.utils.defaultAbiCoder.encode(["uint64"], [subscriptionId])
         )
+
+        // Deploy the client contract
+        const clientFactory = await ethers.getContractFactory("EnergyMarket")
+
+        const args = [
+            oracle.address,
+            subscriptionId,
+            gasLimit,
+            networkConfig[chainId]["keepersUpdateInterval"],
+        ]
+        const client = await clientFactory.deploy(...args)
+        await client.deployTransaction.wait(1)
+
         // Authorize the client contract to use the subscription
         await registry.addConsumer(subscriptionId, client.address)
 
@@ -79,16 +91,23 @@ task(
         await new Promise(async (resolve) => {
             // Initiate the request from the client contract
             const clientContract = await clientFactory.attach(client.address)
-            const requestTx = await clientContract.executeRequest(
+            const requestCBOR = await clientContract.generateRequest(
                 request.source,
                 request.secrets ?? [],
-                request.args ?? [],
-                subscriptionId,
-                gasLimit
+                request.args ?? []
             )
-            const requestTxReceipt = await requestTx.wait(1)
-            const requestId = requestTxReceipt.events[2].args.id
+            const checkData = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(""))
+
+            // Make checkupkeep true
+            const interval = (await clientContract.getUpdateInterval()).toNumber()
+            await network.provider.send("evm_increaseTime", [interval + 1])
+            await network.provider.request({ method: "evm_mine", params: [] })
+
+            const tx = await clientContract.performUpkeep(checkData)
+            const requestTxReceipt = await tx.wait(1)
+            const requestId = txReceipt.events[1].args.requestId
             const requestGasUsed = requestTxReceipt.gasUsed.toString()
+            console.log(`Performed upkeep with RequestId: ${requestId}`)
 
             // Simulating the JavaScript code locally
             console.log("\nExecuting JavaScript request source code locally...")
