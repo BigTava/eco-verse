@@ -1,4 +1,4 @@
-##**Using Chainlink to help sustainable energy projects flourish on-chain and establishing a link between energy communities and crowdlending to finance projects.** 
+**Using Chainlink to help sustainable energy projects flourish on-chain and establishing a link between energy communities and crowdlending to finance projects.** 
 
 ## Inspiration
 The inspiration for EcoVerse emerged from the growing need to address climate change at a hyperlocal level and the desire to empower local communities in managing their energy resources.
