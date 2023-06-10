@@ -8,7 +8,7 @@ const features = [
     icon: EnergyCommunityIcon,
   },
   {
-    name: "Automous Governance",
+    name: "Autonomous Governance",
     description:
       "Participate in decision-making processes that can lead to significant gains to your community. Decide who gets in, how much money to raise.",
     icon: GovernanceIcon,
@@ -22,7 +22,7 @@ const features = [
   {
     name: "Energy Sharing",
     description:
-      "We provide energy sharing services to communities or 3rd parth providers",
+      "We provide energy sharing services to communities or 3rd party providers",
     icon: EnergySharingIcon,
   },
   {
@@ -396,7 +396,7 @@ export function Features() {
               className="rounded-2xl border border-gray-300 p-8 hover:border-gray-600"
             >
               <feature.icon className="h-8 w-8" />
-              <h3 className="mt-6 font-semibold text-gray-900">
+              <h3 className="mt-6 text-lg  font-semibold text-gray-900">
                 {feature.name}
               </h3>
               <p className="mt-2 text-gray-700">{feature.description}</p>
