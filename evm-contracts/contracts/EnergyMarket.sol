@@ -8,31 +8,37 @@ import {AutomationCompatibleInterface} from "@chainlink/contracts/src/v0.8/Autom
 /* Errors */
 
 contract EnergyMarket is FunctionsClient, ConfirmedOwner, AutomationCompatibleInterface {
+    //----------------- Type declarations -----------------
     using Functions for Functions.Request;
 
+    //----------------- State variables -------------------
     bytes public requestCBOR;
     bytes32 public latestRequestId;
     bytes public latestResponse;
     bytes public latestError;
-    uint64 private immutable i_subscriptionId;
-    uint32 private immutable i_fulfillGasLimit;
-    uint256 private immutable i_updateInterval;
-    uint256 private immutable i_lastUpkeepTimeStamp;
+    uint64 private s_subscriptionId;
+    uint32 private s_fulfillGasLimit;
+    uint256 private s_updateInterval;
+    uint256 private s_lastUpkeepTimeStamp;
     uint256 public upkeepCounter;
     uint256 public responseCounter;
 
+    //----------------- Events ----------------------------
     event OCRResponse(bytes32 indexed requestId, bytes result, bytes err);
 
+    //----------------- Modifiers -------------------------
+
+    //----------------- Functions -------------------------
     constructor(
         address oracle,
         uint64 _subscriptionId,
         uint32 _fulfillGasLimit,
         uint256 _updateInterval
     ) FunctionsClient(oracle) ConfirmedOwner(msg.sender) {
-        i_updateInterval = _updateInterval;
-        i_subscriptionId = _subscriptionId;
-        i_fulfillGasLimit = _fulfillGasLimit;
-        i_lastUpkeepTimeStamp = block.timestamp;
+        s_updateInterval = _updateInterval;
+        s_subscriptionId = _subscriptionId;
+        s_fulfillGasLimit = _fulfillGasLimit;
+        s_lastUpkeepTimeStamp = block.timestamp;
     }
 
     function generateRequest(
@@ -56,25 +62,25 @@ contract EnergyMarket is FunctionsClient, ConfirmedOwner, AutomationCompatibleIn
         uint256 _updateInterval,
         bytes calldata newRequestCBOR
     ) external onlyOwner {
-        updateInterval = _updateInterval;
-        subscriptionId = _subscriptionId;
-        fulfillGasLimit = _fulfillGasLimit;
+        s_updateInterval = _updateInterval;
+        s_subscriptionId = _subscriptionId;
+        s_fulfillGasLimit = _fulfillGasLimit;
         requestCBOR = newRequestCBOR;
     }
 
     function checkUpkeep(
         bytes memory
     ) public view override returns (bool upkeepNeeded, bytes memory) {
-        upkeepNeeded = (block.timestamp - lastUpkeepTimeStamp) > updateInterval;
+        upkeepNeeded = (block.timestamp - s_lastUpkeepTimeStamp) > s_updateInterval;
     }
 
     function performUpkeep(bytes calldata) external override {
         (bool upkeepNeeded, ) = checkUpkeep("");
         require(upkeepNeeded, "Time interval not met");
-        lastUpkeepTimeStamp = block.timestamp;
+        s_lastUpkeepTimeStamp = block.timestamp;
         upkeepCounter = upkeepCounter + 1;
 
-        bytes32 requestId = s_oracle.sendRequest(subscriptionId, requestCBOR, fulfillGasLimit);
+        bytes32 requestId = s_oracle.sendRequest(s_subscriptionId, requestCBOR, s_fulfillGasLimit);
 
         s_pendingRequests[requestId] = s_oracle.getRegistry();
         emit RequestSent(requestId);
@@ -94,5 +100,14 @@ contract EnergyMarket is FunctionsClient, ConfirmedOwner, AutomationCompatibleIn
 
     function updateOracleAddress(address oracle) public onlyOwner {
         setOracle(oracle);
+    }
+
+    /* Getter Functions */
+    function getLastUpkeepTimeStamp() public view returns (uint256) {
+        return s_lastUpkeepTimeStamp;
+    }
+
+    function getUpdateInterval() public view returns (uint256) {
+        return s_updateInterval;
     }
 }
