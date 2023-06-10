@@ -62,12 +62,7 @@ export function Header() {
         <HeaderContainer>
           <div className="relative z-10 flex items-center gap-16">
             <a href="/" aria-label="Home">
-              <img
-                className="animate-bounce"
-                src={logo}
-                alt="logo"
-                width="160px"
-              ></img>
+              <img className="" src={logo} alt="logo" width="160px"></img>
             </a>
             {!community && (
               <NavLinks

@@ -112,7 +112,7 @@ export default function CrowdloansTable({ data }: CrowdloansTableProps) {
           address: address,
           activationDate: BigNumberToDate(startAt).toString(),
           expirationDate: BigNumberToDate(endAt).toString(),
-          asset: "WETH Mock",
+          asset: "ECO Mock",
           apy: (data._campaigns[index].apy as BigNumber).toString(),
           goal: (data._campaigns[index].goal as BigNumber).toString(),
           loaned: (data._campaigns[index].pledged as BigNumber).toString(),

@@ -39,7 +39,7 @@ const CrowdloanCard = (props: CrowdloanCardProps) => {
 
   const { runContractFunction: increaseAllowance } = useWeb3Contract({
     abi: erc20Abi,
-    contractAddress: contractAddresses[chainId]["weth"],
+    contractAddress: contractAddresses[chainId]["erc20Mock"],
     functionName: "increaseAllowance",
     params: {
       spender: props.address,
