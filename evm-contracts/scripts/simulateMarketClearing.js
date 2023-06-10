@@ -2,7 +2,7 @@ const {
     simulateRequest,
     getDecodedResultLog,
     getRequestConfig,
-} = require("../chainlink-functions/FunctionsSandboxLibrary")
+} = require("../FunctionsSandboxLibrary")
 
 const runSimulation = async (requestConfig) => {
     const { resultLog, result, success } = await simulateRequest(requestConfig)

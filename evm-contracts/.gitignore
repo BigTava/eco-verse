@@ -9,10 +9,12 @@ node_modules
 coverage
 coverage.json
 typechain
-typechain-types
 
 # don't push the environment vars!
 .env
+
+# These environment variables are encrypted, but should not be pushed unless a secure password is used
+.env.enc
 
 # Built application files
 .DS*
@@ -100,27 +102,18 @@ lint/tmp/
 # lint/reports/
 
 gas-report.txt
-.issue.md
-node_modules
-.env
-coverage
-coverage.json
-typechain
-typechain-types
 
-# Hardhat files
-cache
-artifacts
+contracts/test/fuzzing/crytic-export
 
+Functions-request.json
+offchain-secrets.json
 
-node_modules
-.env
-coverage
-coverage.json
-typechain
-typechain-types
+allowlist.csv
+invalidUsers.csv
+updatedAllowlist.csv
 
-# Hardhat files
-cache
-artifacts
+# OpenZeppelin Upgrades local network artifacts
+.openzeppelin
 
+# Chainlink Functions request artifacts
+.chainlink_functions
