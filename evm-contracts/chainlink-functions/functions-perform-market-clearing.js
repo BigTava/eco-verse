@@ -1,13 +1,23 @@
 const prompt = args[0]
 const today = new Date()
-console.log("HEY")
-if (!secrets.inescKey) {
-    throw Error("Need to set ECOVERSE_KEY environment variable")
+const formattedDate = date.toISOString().split("T")[0]
+
+if (!secrets.ecoverseKey) {
+    throw Error("Need to set ECOVERSE_API_KEY environment variable")
 }
 
 const eletricityPricesRequest = Functions.makeHttpRequest({
-    url: "https://vcegi07.inesctec.pt/core/api/",
-    method: "POST",
+    url: `https://vcegi07.inesctec.pt/core/api/omie/pagination?limit=1&offset=0&date=${formattedDate}&database_type=postgres`,
+    method: "GET",
+    headers: {
+        Authorization: `Bearer ${secrets.ecoverseKey}`,
+    },
+    data: {},
+})
+
+const energyTariffsRequest = Functions.makeHttpRequest({
+    url: `https://vcegi07.inesctec.pt/core/api/erse_tariffs/be98f56d-d9c6-4c48-a73a-1ed80a953237/2023-01-01`,
+    method: "GET",
     headers: {
         Authorization: `Bearer ${secrets.ecoverseKey}`,
     },
@@ -15,7 +25,12 @@ const eletricityPricesRequest = Functions.makeHttpRequest({
 })
 
 const eletricityPricesResponse = await Promise.all([eletricityPricesRequest])
-console.log("raw response", eletricityPricesResponse)
+const energyTariffsResponse = await Promise.all([energyTariffsRequest])
+console.log("prices raw response", eletricityPricesResponse)
+console.log("tariffs raw response", energyTariffsResponse)
 
-const result = eletricityPricesResponse.data
-return Functions.encodeString(result)
+const result = {
+    prices: eletricityPricesResponse.data[0],
+    tariffs: energyTariffsResponse.data[0],
+}
+return result

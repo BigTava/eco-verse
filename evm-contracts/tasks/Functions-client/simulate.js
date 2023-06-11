@@ -96,16 +96,23 @@ task(
                 request.secrets ?? [],
                 request.args ?? []
             )
-            const checkData = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(""))
+
+            await clientContract.setRequest(
+                subscriptionId,
+                gasLimit,
+                networkConfig[chainId]["keepersUpdateInterval"],
+                requestCBOR
+            )
 
             // Make checkupkeep true
             const interval = (await clientContract.getUpdateInterval()).toNumber()
             await network.provider.send("evm_increaseTime", [interval + 1])
             await network.provider.request({ method: "evm_mine", params: [] })
 
+            const checkData = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(""))
             const tx = await clientContract.performUpkeep(checkData)
             const requestTxReceipt = await tx.wait(1)
-            const requestId = txReceipt.events[1].args.requestId
+            const requestId = requestTxReceipt.events[2].args.requestId
             const requestGasUsed = requestTxReceipt.gasUsed.toString()
             console.log(`Performed upkeep with RequestId: ${requestId}`)
 
